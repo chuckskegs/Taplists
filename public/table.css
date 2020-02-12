@@ -1,0 +1,144 @@
+html {
+  background-color: #44a53b;
+  /* why does this need to be here?>*/
+}
+
+body {
+  background-color: #000000;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+
+table {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border: 1px solid #1c6ea4;
+  background-color: #1f1f1f;
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  font-family: Helvetica;
+}
+table td,
+table th {
+  border: 1px solid black;
+}
+
+table tr:nth-child(even) {
+  background: #000000;
+}
+
+table thead {
+  border-bottom: 2px solid #444444;
+}
+
+table thead th {
+  font-size: 35px;
+  font-weight: bold;
+
+  text-align: center;
+  padding: 2px;
+}
+#headers {
+  background-color: #1134a6;
+  color: #ffffff;
+}
+
+table tbody tr:hover {
+  background-color: #ddd;
+}
+table tbody td {
+  color: #ffffff;
+  font-size: 41px;
+  height: 60px;
+  padding: 0px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+table tfoot {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  background: #000000;
+  border-top: 2px solid #444444;
+}
+table tfoot td {
+  font-size: 14px;
+  padding: 7px 5px; /*height then sides */
+}
+table tfoot .links {
+  text-align: center;
+}
+table tfoot .links button {
+  display: inline-block;
+  background: #ffffff;
+  color: #000000;
+  padding: 2px 8px;
+  border-radius: 5px;
+}
+
+/* #beers {
+  text-align: center;
+} */
+
+
+
+
+/* Alignment */
+.tap, .serving, .price, .growler, .origin, .abv {
+  text-align: center;
+  font-size: 200%;
+}
+
+/* Mobile View */
+@media (max-width: 1000px) {
+  .beer {
+    color: fuchsia;
+    
+  }
+  thead, .tap, .growler, .origin {
+    display: none;
+  }
+  .beer, .serving, .price, .abv {
+    font-size: 14px;
+  }
+}
+
+.tap::before {
+  content: "Tap ";
+  font-size: small;
+}
+
+.price::before {
+  content: "$";
+}
+
+.abv::after {
+  content: "%";
+}
+
+
+
+
+/* Stars for serving sizes other than 16oz */
+.serving.differentSize::before {
+  content: "*";
+}
+.serving.differentSize::after {
+  content: "*";
+}
+
+
+/* Colors based on beer type 
+.Cider {
+  color: chartreuse;
+}
+
+[class*="IPA"] {
+  color: red;
+}
+*/

@@ -1,0 +1,29 @@
+
+See current webhooks on Trello: https://api.trello.com/1/tokens/ae6ebe60b45abcd2d4aa945c9ab4c4571bd6b6f7856b1df0cd387fbffc649579/webhooks/?key=a211f4aca7fb3e521d652730dd231cb6
+
+Use something like this to differentiate between media types?
+See: https://developer.mozilla.org/en-US/docs/Web/CSS/At-rule#Conditional_group_rules
+<link rel="stylesheet" href="style.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="style.css" type="text/css" media="print" />
+
+external style stylesheet
+<link rel="stylesheet" href="https://unpkg.com/marx-css/css/marx.min.css">
+npm install marx-css
+
+
+Modules:
+<import> or <export> in global scope of file => treated like a module
+No import/export, and treated like normal script in page with all variables as globally available, even to the modules
+
+example parent directory file
+export * as utilities from "./utilities";
+use in controller?
+import { utilities } from "./index";
+
+Typescript way
+SimpleModule.ts -_-_-_-_--
+import m = require("mod");
+export let t = m.something + 1;
+becomes:
+import { something } from "./mod";
+export var t = something + 1;

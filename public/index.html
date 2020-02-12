@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Page Title for top of browser -->
+    <title>Welcome to Chuck's Taplist</title>
+    <meta charset="utf-8" />
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      href="https://chuckskegs.square.site/uploads/b/5ca856d0-f1fc-11e9-a24f-55d42ce7c1ba/Chuck%20Face.png?width=400"
+    />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Anti-cacheing directions...to remove in deployment? -->
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    
+    
+    <script type="text/javascript">
+      if (!document.__defineGetter__) {
+        Object.defineProperty(document, "cookie", {
+          get: function() {
+            return "";
+          },
+          set: function() {
+            return true;
+          }
+        });
+      } else {
+        document.__defineGetter__("cookie", function() {
+          return "";
+        });
+        document.__defineSetter__("cookie", function() {});
+      }
+    </script>
+
+    <!-- Stylesheet 
+    <link rel="stylesheet" href="https://unpkg.com/marx-css/css/marx.min.css">  -->
+    <link rel="stylesheet" type="text/css" href="table.css" />
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
+    
+    <!-- <script data-main="square.js" src="scripts/require.js"></script> -->
+    <!-- My Script -->
+    <!-- Analytics and ASynch -->
+  </head>
+
+  <body>
+    <!-- My Table -->
+    <table id="inner">
+      <thead>
+        <tr id="headers">
+          <th id="1">Tap</th>
+          <th id="2">Beer</th>
+          <th id="3">Serving</th>
+          <th id="4">Price</th>
+          <th id="5">Growler</th>
+          <th id="6">Origin</th>
+          <th id="7">%ABV</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        <tr>
+          <td></td>
+          <td></td>
+          <td>Select</td>
+          <td>Hop</td>
+          <td>Shop</td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="7">
+            <div class="links">
+              <button id="CD1">CD 1-25</button>
+              <button id="CD2">CD 26-50</button>
+              <button id="CD3">CD 51+</button>
+              <button id="CD4" style="visibility: hidden;">CD Bottles</button>
+              <button id="GW1">GW 1-25</button>
+              <button id="GW2">GW 26-50</button>
+              <button id="Refresh">Refresh</button>
+              <a id="lastRefresh"></a>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <!-- My Code -->
+    <script defer src="variables.js"></script>
+    <script defer src="model.js"></script>
+    <script defer src="view.js"></script>
+    <script defer src="require.js"></script>
+    <script defer src="controller.js"></script>
+    <!-- <script type="module" src="square.js"></script> -->
+  </body>
+</html>
