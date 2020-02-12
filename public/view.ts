@@ -1,5 +1,19 @@
 // Uses data provided to display an HTML table
 
+
+// Can be used for header of table:
+// Key coordinates with keys in Beer objects, values are for the display to render
+// create this based on results of board custom fields? screw up the order?
+const menuHeader = {
+    tap: "Tap",
+    beer: "Beer",
+    serving: "Serving",
+    price: "Price",
+    growler: "Growler",
+    origin: "Origin",
+    abv: "%ABV",
+}
+
 // Costructs page on first load
 const initiateTable = () => {
     // Use event object to determine which location to display first
@@ -18,8 +32,7 @@ const initiateTable = () => {
 const loadGW = () => {
     // gwEvents().then(generateTable).catch((err) => alert(err));
 
-    // $.get("/cd-taps").then((res) => console.log(`Then me: ${res}`));
-    getData(GW).then(generateTable);
+    $.get("/gw-taps").then(generateTable);
 
 }
 
@@ -27,7 +40,9 @@ const loadGW = () => {
 const loadCD = () => {
     // cdEvents().then(generateTable).catch((err) => alert(err));
 
-    getData(CD).then(generateTable);
+    $.get("/cd-taps").then(generateTable);
+
+    // getData(CD).then(generateTable);
 }
 
 
@@ -35,7 +50,6 @@ const loadCD = () => {
 // Rewrites table data
 const generateTable = (data: object[]) => {
     // Use sample data if none povided
-    if (!data) { data = sampleData };
     var tBody = document.getElementById("table-body")!; // Expects not null "!"
     tBody.innerHTML = "";
     // console.log(data);
