@@ -8,9 +8,6 @@ const fieldType = {
 // let customDef = {};
 
 
-// Constructs URL string for http request for card info
-const getUrl = (listId: string) => `https://api.trello.com/1/lists/${listId}/cards/?customFieldItems=true&key=${key}&token=${token}`;
-const getListJson = (list: string) => { console.log("hey"); return "hi there"};
     // $.getJSON(getUrl(list)).then(res => res).catch((err) => err);
 
 
@@ -46,6 +43,7 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
         // if () {}
         // @ts-ignore
         // if (Object.values(menuHeader).includes(fieldName))  { 
+        // what does this do again?
         let found = Object.keys(menuHeader).find((key) => menuHeader[key] == fieldName);
 
         if (found) {fieldName = found};
@@ -138,41 +136,21 @@ const calculatePrice = (beer: any) => {
     if (beer.Special == "Nitro") {
         // beer.Serving = "16 oz";
         //@ts-ignore
-        // this overrides if any serving sizes are other than 20oz. I was told this would never happen but they had 8oz Nitro's for Fort George event (2/7/20)
+        // this overrides if any nitro serving sizes are other than 20oz. I was told this would never happen but they had 8oz Nitro's for Fort George event (2/7/20)
         beer.price = beer.priceOz * 16 + plusValue[beer.Special];   //<--- add a dollar to nitro?
         // beer.Serving = "20 oz";
-        
     } else {
         //@ts-ignore
-        beer.price = beer.priceOz * parseInt(beer.serving) + plusValue[beer.oz];
-        
+        beer.price = beer.priceOz * parseInt(beer.serving) + plusValue[beer.oz];  
     }
     beer.price = Math.max(Math.ceil(beer.price * roundValue)/roundValue, minPrice);
-    
-    
     return beer.price;
 };
 
 
 
 
-
-
-
-
-// Custom Field Object ////////////////////////////////////////////
-
-// create customs object with states that can be changed
-// and methods like returnCustoms
-const getCustomsJson = (boardId: string) => {
-    let url = 'https://api.trello.com/1/boards/'.concat(boardId, '/customFields?key=', key, '&token=', token);
-    return $.getJSON(url);
-}; 
-// as a Promise?
-// let getCustomsJson = new Promise((resolve, reject) => {
-//     let url = 'https://api.trello.com/1/boards/'.concat(GW.board, '/customFields?key=', key, '&token=', token);
-//     resolve ($.getJSON(url));
-// }); 
+/////////////////////////// Custom Definition Management \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 // Recieves array of objects (customField descriptors)
 // Returns object with keys [field id] and values [customField info]
@@ -194,7 +172,7 @@ const CustomField = function (this: any, field: any) {
     this.name = field.name;
     this.type = field.type;
     
-    // if (field.type == `list`) {
+    // Set options definitions if custom field type is a "list"
     switch (field.type) {
         case `list`:
             field.options.map((option: any) => 
@@ -204,14 +182,9 @@ const CustomField = function (this: any, field: any) {
                 });
             break;
         case `checkbox`: 
-            
         //     this.check = true;
         // case `undefined`:
-
-            
     }
-
-
 }
 /*
 {
@@ -271,4 +244,4 @@ v
 
 ////////////////////// Exports   ////////////////////////////////////////////////////////////////////
 
-export { Beer, getCustomDefinition, getCustomsJson, fieldType, getListJson };
+export { Beer, getCustomDefinition };

@@ -1,67 +1,32 @@
 // 3rd-Party modules
 const functions = require('firebase-functions');
-const express = require('express');
+// const express = require('express');
+import * as express from 'express';
 const app = express();
 // Http request node module to make
-const http = require('axios').default;
+// const http = require('axios').default;
+import http from 'axios';
 // - need to use res.data to access the response information
 
-import { CD, GW, key, token, growlerCalc, minPrice, roundValue, plusValue, markUp, menuHeader, sampleObj } from "./variables";
-import { Beer, getCustomDefinition, getCustomsJson, fieldType } from "./model";
+import { CD, GW, key, token } from "./variables";
+import { Beer, getCustomDefinition } from "./model";
 
 
 
 
-
-// @ts-ignore
-app.get('/timestamp', (request, response) => {
+app.get('/timestamp', (request: express.Request, response: express.Response) => {
     response.send(`test`);
 });
 // @ts-ignore
 app.get('/cd-taps', (request, response) => {
     response.set('Cache-Control', 'public, max-age=5, s-maxage=5');
-    // response.json(sampleObj);
     getData(CD).then((res) => response.json(res)).catch((err) => response.send(`Error: ${err}`));
-    // response.json(`CD-Taps`);
-    // response.render('index');
 });
 // @ts-ignore
-<<<<<<< HEAD
-app.get('/test', (request, response) => {
-    
-    const url = `https://api.trello.com/1/lists/5592b25a535fb4a14dea3bbf/cards/?customFieldItems=true&key=a211f4aca7fb3e521d652730dd231cb6&token=ae6ebe60b45abcd2d4aa945c9ab4c4571bd6b6f7856b1df0cd387fbffc649579`;
-    // response.send($.get(url))
-    try {
-
-        http.get(url).then((resp: Response) => console.log(resp)).catch((err: Error) => console.error("caught err"));
-        // response.send(http);
-    } catch (error) {
-        console.error(error);
-        // no errors
-        
-    } 
-    
-
-
-    // getData(CD).then((res) => response.json(res)).catch((err) => err);
-    
-    // response.json(getData("hello").then);
-=======
 app.get('/gw-taps', (request, response) => {
     response.set('Cache-Control', 'no-cache, no-store');//'public, max-age=5, s-maxage=5');
-    // response.json(sampleObj);
     getData(GW).then((res) => response.json(res)).catch((err) => response.send(`Error: ${err}`));
-    // response.json(`CD-Taps`);
->>>>>>> dev
-    // response.render('index');
 });
-
-
-
-
-
-
-
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -69,45 +34,27 @@ app.get('/gw-taps', (request, response) => {
 // put variables here?
 
 
-let customDef = {};
 
 // async works!
+// Returns current taplist data based on shop parameter requested
 async function getData (shop: any) {
     // getUrl to be modified to support limited cards? or just filter deck after...
     let getUrl = (listId: string) => `https://api.trello.com/1/lists/${listId}/cards/?customFieldItems=true&key=${key}&token=${token}`;
     // Use axios to synchronously get JSON from apropriate list using async/await
     let listJson = await http.get(getUrl(shop.list)).then((res: any) => res.data).catch((err: Error) => console.error(err));
     
-    // Asynchronously retrieves list data from Trello
-    // let listJson = await getListJson(shop.list);
-    
+    // Synchronously retrieves list data from Trello
     let url = `https://api.trello.com/1/boards/${shop.board}/customFields?key=${key}&token=${token}`;
-    customDef = await http.get(url).then((resp: any) => getCustomDefinition(resp.data)).catch((err: Error) => err);
+    let customDef = await http.get(url).then((resp: any) => getCustomDefinition(resp.data)).catch((err: Error) => err);
 
-    // customDef = await http.get(url).then(getCustomDefinition).catch((err: Error) => err);
-    // customDef = await getCustomsJson(shop.board).then(getCustomDefinition).catch(err => err);
-    
-
-    //getCustomsJson.then(getCustomDefinition);
-
-    // let cards = makeCards(listJson);
-    // Initiate customs based on shop location
-    // customs(shop);
     // Creates an array of Beer objects 
-    // @ts-ignore
     let cards = listJson.map((card: any, index: number) => new (Beer as any)(card, customDef, index));
-    console.log("cards: ", cards);
     
-    console.log("get to me last");
-// return cards
-    // $.get("/cd-taps").then((res: any) => console.log(`Then me: ${res.data}`));
-
-    // console.log(`Then Print Me: ${$.get("/cd-taps")}`);
-    
+    // console.log("Cards: ", cards);
+    // console.log("Get to me last?");
     return cards;
 }
-// getData(GW);
-// console.log(listJson(GW.list));
+
 
 
 
@@ -116,7 +63,7 @@ async function getData (shop: any) {
 
 
 
-
+ 
 
 
 
