@@ -13,7 +13,8 @@ import { Beer, getCustomDefinition, getCustomsJson, fieldType } from "./model";
 
 
 
-
+const pie = 3.14;
+pie * 2;
 
 
 // @ts-ignore
