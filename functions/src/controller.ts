@@ -3,7 +3,7 @@ const functions = require('firebase-functions');
 const express = require('express');
 const app = express();
 // Http request node module to make
-const http = require('request-promise');
+const http = require('axios').default;
 require('jquery');
 // const $ = jQuery();
 // import * as $ from "jquery";
@@ -38,20 +38,16 @@ app.get('/cd-taps', (request, response) => {
 app.get('/test', (request, response) => {
     
     const url = `https://api.trello.com/1/lists/5592b25a535fb4a14dea3bbf/cards/?customFieldItems=true&key=a211f4aca7fb3e521d652730dd231cb6&token=ae6ebe60b45abcd2d4aa945c9ab4c4571bd6b6f7856b1df0cd387fbffc649579`;
-    response.send($.get(url))
-    $.get(url).then((res: any) => response.serve(res));
-    let callback = (resp: any) => {
-        let testing = resp.toString();
-        response.send(`hi ${(testing)}`);
-        resp.on('data', (d: any) => {
-            process.stdout.write(d);
+    // response.send($.get(url))
+    try {
 
-        })
-    }
-    http.get(url);
-    // const getListJson = (list: string) =>
-    // $.getJSON(url).then((res: any) => response.json(res)).catch((err: any) => err);
-
+        http.get(url).then((resp: Response) => console.log(resp)).catch((err: Error) => console.error("caught err"));
+        // response.send(http);
+    } catch (error) {
+        console.error(error);
+        
+    } 
+    
 
 
     // getData(CD).then((res) => response.json(res)).catch((err) => err);
