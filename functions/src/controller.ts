@@ -45,6 +45,7 @@ app.get('/test', (request, response) => {
         // response.send(http);
     } catch (error) {
         console.error(error);
+        // no errors
         
     } 
     
