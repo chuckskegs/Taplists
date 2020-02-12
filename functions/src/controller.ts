@@ -47,7 +47,7 @@ app.get('/test', (request, response) => {
 
         })
     }
-    https.get(url, callback);
+    http.get(url);
     // const getListJson = (list: string) =>
     // $.getJSON(url).then((res: any) => response.json(res)).catch((err: any) => err);
 
