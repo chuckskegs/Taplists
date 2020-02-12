@@ -11,15 +11,14 @@
     />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Anti-cacheing directions...to remove in deployment? -->
+    <!-- no cache... -->
     <meta
       http-equiv="Cache-Control"
       content="no-cache, no-store, must-revalidate"
     />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    
-    
+    <!-- no cookies... -->
     <script type="text/javascript">
       if (!document.__defineGetter__) {
         Object.defineProperty(document, "cookie", {
@@ -38,13 +37,15 @@
       }
     </script>
 
+
     <!-- Stylesheet 
     <link rel="stylesheet" href="https://unpkg.com/marx-css/css/marx.min.css">  -->
     <link rel="stylesheet" type="text/css" href="table.css" />
 
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
+    <!-- removed firebase src (2/12) -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script> -->
     
     <!-- <script data-main="square.js" src="scripts/require.js"></script> -->
     <!-- My Script -->
@@ -95,11 +96,7 @@
     </table>
 
     <!-- My Code -->
-    <script defer src="variables.js"></script>
-    <script defer src="model.js"></script>
     <script defer src="view.js"></script>
-    <script defer src="require.js"></script>
-    <script defer src="controller.js"></script>
     <!-- <script type="module" src="square.js"></script> -->
   </body>
 </html>

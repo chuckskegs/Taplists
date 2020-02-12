@@ -24,7 +24,7 @@ const getListJson = (list: string) => { console.log("hey"); return "hi there"};
 // This is where we add parameters to the object that can be used in the future
 // Order Matters
 // Make Beer objects from Trello JSON information
-const Beer = function (this: any, card: any, index: number) {
+const Beer = function (this: any, card: any, customDef: any, index: number) {
     this.tap = (index + 1);
     if (card.name.charAt(0) == "_" || card.name.charAt(0) == "-") {
         return;
