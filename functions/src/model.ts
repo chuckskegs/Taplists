@@ -1,24 +1,84 @@
-import { growlerCalc, minPrice, roundValue, plusValue, markUp, menuHeader } from "./variables";
+// My Variables
+import { CD, GW, key, token, growlerCalc, minPrice, roundValue, plusValue, markUp, menuHeader } from "./variables";
+// Http request-sending node module to communicate with Trello and Square
+import http, { AxiosResponse, AxiosError } from 'axios';  // - need to use response.data to access the information
+
+// asynchronized!
+// Returns current taplist data based on query parameter provided
+async function getData (menu: string) {
+    // Identifies shop and list to display from the menu query parameter
+    // Checks if starts with GW such as GW1, GW2, etc. and set's shop value accordingly
+    let shop = menu.startsWith('GW') ? GW : CD;
+    let list = shop.list;
+    
+
+    ////// Filter for Screen \\\\\\
+    // Use redux to extract number from query
+    // let list = menu.replace( /^\D+/g, '');
+    let screen: number = parseInt(menu.charAt(2));
+    let start;
+    let end;
+
+    // Reduce Deck size based on screen to be displayed
+    // Hopefully could be replaced with a CSS option
+    switch (screen) {
+        case 1:
+            // start = 0;
+            end = 25;
+            break;
+        case 2:
+            start = 25;
+            // end = 50;
+            break;
+        case 3:
+            // start = 0;
+            list = shop.list2;         
+            break;    
+        default:
+            // Use all the cards for mobile (hint: because button id doesn't have number associated)
+            break;
+    }
+
+    // ...getUrl to be modified to support limited cards? or just filter deck after...
+    let getUrl = (listId: string) => `https://api.trello.com/1/lists/${listId}/cards/?customFieldItems=true&key=${key}&token=${token}`;
+    // Use axios to synchronously get JSON from apropriate list using async/await
+    let jsonDeck: Array<JSON> = await http.get(getUrl(list)).then((res: AxiosResponse) => res.data).catch((err: AxiosError) => console.error(err.message));
+    
+    // Synchronously retrieves list data from Trello
+    let url = () => `https://api.trello.com/1/boards/${shop.board}/customFields?key=${key}&token=${token}`;
+    let customDef = await http.get(url()).then((res: AxiosResponse) => getCustomDefinition(res.data)).catch((err: AxiosError) => err.message);
+    
+    
+    
+    // Creates an array of Beer objects 
+    // Looks at each card from Trello and creates Beer objects using the definitions made
+    let cards = jsonDeck.map((card: any, index: number) => new (Beer as any)(card, customDef, index));
+    
+
+    // // Reduce Deck size based on screen to be displayed
+    // // Could be replaced with a CSS option
+    cards = cards.slice(start, end);
+    return cards;
+}
 
 
-// // Constructor: Creates event object
-// //////////////
+
+
+
 // This is where we add parameters to the object that can be used in the future
 // Order Matters
 // Make Beer objects from Trello JSON information
 const Beer = function (this: any, card: any, customDef: any, index: number) {
-    // Checks if index exists (first expression) and then considers the second statement
-    !isNaN(index) && (this.tap = (index + 1));
     // (index!)? this.tap = (index + 1): undefined;
     if (card.name.charAt(0) === "_" || card.name.charAt(0) === "-") {
         return;
     }
+    // Checks if index exists (first expression) and then considers the second statement
+    !isNaN(index) && (this.tap = (index + 1));
     
     let cardCustoms = card.customFieldItems;    
-    // if (index == 0) {console.log("Card Customs ", cardCustoms)};
     
     // @ts-ignore
-    // console.log("Here: ", customDef[cardCustoms[0].idCustomField].name);
     // Analyze and translate custom field information from Trello Cards
     cardCustoms.map((customInfo: any) => {
         let fieldName = customDef[customInfo.idCustomField].name;
@@ -59,8 +119,8 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
     }
     // this.price = this["Keg$"];
     // Calculates price based on keg size, keg cost, and serving size
-    const price = calculatePrice(this);
-    price * 2; //temp
+    this.price = calculatePrice(this);
+    // price * 2; //temp
     // this.growler = `N/A`;
     // Set growler price based on normal price, serving size, size of keg, and cost
     if (this.NoGr) {
@@ -82,7 +142,6 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
     //     }
     // });
 }
-
 
 
 
@@ -124,9 +183,17 @@ const calculatePrice = (beer: any) => {
         // Set price price based on serving size, price per oz, and additional base price (plusValue)
         beer.price = beer.priceOz * parseInt(beer.serving) + plusValue[beer.oz];  
     }
-    // Round up [to nearest quarter ($0.25)] and don't let it be less than the minimum price allowed [$5.00]
-    beer.price = Math.max(Math.ceil(beer.price * roundValue)/roundValue, minPrice);
-    return beer.price;
+
+    // Round up [to nearest quarter ($0.25)] 
+    beer.price = Math.ceil(beer.price * roundValue)/roundValue;
+
+    // If alcoholic, don't let it be less than the minimum price allowed [$5.00]
+    beer.price = (beer.abv) ? beer.price : Math.max(beer.price, minPrice);
+
+    // If override value exists (from Trello) return that value istead of normal price calculation
+    return (!beer[`$Override`]) ? beer.price : beer[`$Override`];
+    // return beer.price;
+
 };
 
 
@@ -176,4 +243,4 @@ const CustomField = function (this: any, field: any) {
 
 ////////////////////// Exports   ////////////////////////////////////////////////////////////////////
 
-export { Beer, getCustomDefinition };
+export { getData, Beer, getCustomDefinition };

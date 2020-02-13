@@ -13,43 +13,19 @@ var menuHeader = {
     origin: "Origin",
     abv: "%ABV",
 };
-// Costructs page on first load
+// Might slow process down to retrieve from firebase functions
+// const header = async () => await $.get("/headers");
+// OLD
+// Costructs page on first load..?
 var initiateTable = function () {
     // Use event object to determine which location to display first
-    // -- possibly by URL difference
-    // events.then(generateTable);
-    // Here
-    // generateTable(sampleObj);
-    // getData(CD).then(generateTable);
-    // myEvents().then(generateTable).catch((err) => alert(err));
-    // myEvents(calId).then(generateTable);
 };
-//  Could do something that uses request information to identify which button was pressed?
 // "GW Events" onClick
 var loadGW = function () { $.get("/gw1").then(generateTable); };
 // "CD Events" onClick
 var loadCD = function () { $.get("/cd1").then(generateTable); };
+// Primary Response to Load The App Display
 var loadDisplay = function (req) {
-    // let endPoint;// = `req.target`;
-    // @ts-ignore: no id on type EventTarget
-    // switch (req.target.id) {
-    //     case 'CD1':
-    //         endPoint = "/cd-taps";
-    //         break;
-    //     case 'CD2':
-    //         endPoint = "/cd-taps";
-    //         break;
-    //     case 'CD3':
-    //         break;
-    //     case 'GW1':
-    //         break;
-    //     case 'GW2':
-    //         break;
-    //     default:
-    //         break;
-    // }
-    // @ts-ignore: no id on type EventTarget
-    // let buttonId = req.target.id;
     // @ts-ignore: no id on type EventTarget
     // Query parameters to be sent to server-side code
     // Determines data to retrieve by the id of the button pressed
@@ -74,16 +50,14 @@ var generateTable = function (data) {
         // Uses menuHeader to determine which fields to include
         Object.keys(menuHeader).map(function (key) {
             // "as any" removes type error?
-            ////vv 
             var eventDetail = obj[key];
             // Create table cells and fill with data
             var cell = document.createElement("td");
             // @ts-ignore // default object data does not have paraemeters? create class/interface?
-            // Adds two classes to the cell, could inherit from the parent...
+            // Adds three classes to the cell, could inherit from the parent...
             cell.className = key + " row" + row.rowIndex + " " + obj.type;
             // @ts-ignore
-            // This is an example of how to do styling based on some calculation
-            // Would extract as a callback if necessary
+            // Add styling class based on a condition
             if (obj.serving != "16 oz") {
                 cell.className += " differentSize";
             }

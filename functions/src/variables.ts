@@ -1,6 +1,7 @@
 //variables
 
 ////////////////////  Interface  \\\\\\\\\\\\\\\\\\\\\\\
+// Trial1
 interface menuHeader {
     tap: string;
     beer: string;
@@ -10,6 +11,8 @@ interface menuHeader {
     origin: string;
     abv: string;
 }
+
+
 // Can be used for header of table:
 // Key coordinates with keys in Beer objects, values are for the display to render
 // create this based on results of board custom fields? screw up the order?
