@@ -88,12 +88,40 @@ async function getData (menu: string) {
     // Identifies shop and list to display from the menu query parameter
     // Checks if starts with GW such as GW1, GW2, etc. and set's shop value accordingly
     let shop = menu.startsWith('GW') ? GW : CD;
+    let list = shop.list;
     
+
+    ////// Filter for Screen \\\\\\
+    // Use redux to extract number from query
+    // let list = menu.replace( /^\D+/g, '');
+    let screen: number = parseInt(menu.charAt(2));
+    let start;
+    let end;
+
+    // Reduce Deck size based on screen to be displayed
+    // Hopefully could be replaced with a CSS option
+    switch (screen) {
+        case 1:
+            // start = 0;
+            end = 25;
+            break;
+        case 2:
+            start = 25;
+            // end = 50;
+            break;
+        case 3:
+            // start = 0;
+            list = shop.list2;         
+            break;    
+        default:
+            // Use all the cards for mobile (hint: because button id doesn't have number associated)
+            break;
+    }
 
     // ...getUrl to be modified to support limited cards? or just filter deck after...
     let getUrl = (listId: string) => `https://api.trello.com/1/lists/${listId}/cards/?customFieldItems=true&key=${key}&token=${token}`;
     // Use axios to synchronously get JSON from apropriate list using async/await
-    let jsonDeck: Array<JSON> = await http.get(getUrl(shop.list)).then((res: AxiosResponse) => res.data).catch((err: AxiosError) => console.error(err.message));
+    let jsonDeck: Array<JSON> = await http.get(getUrl(list)).then((res: AxiosResponse) => res.data).catch((err: AxiosError) => console.error(err.message));
     
     // Synchronously retrieves list data from Trello
     let url = () => `https://api.trello.com/1/boards/${shop.board}/customFields?key=${key}&token=${token}`;
@@ -107,26 +135,14 @@ async function getData (menu: string) {
     
 
 
-    ////// Filter for Screen \\\\\\
-    // Use redux to extract number from query
-    // let list = menu.replace( /^\D+/g, '');
-    let screen: number = parseInt(menu.charAt(2));
+    // ////// Filter for Screen \\\\\\
+    // // Use redux to extract number from query
+    // // let list = menu.replace( /^\D+/g, '');
+    // let screen: number = parseInt(menu.charAt(2));
 
-    // Reduce Deck size based on screen to be displayed
-    // Hopefully could be replaced with a CSS option
-    switch (screen) {
-        case 1:
-            cards.length = 25;
-            break;
-        case 2:
-            cards = cards.slice(25);
-            break;
-        case 3:
-            break;    
-        default:
-            // Use all the cards for mobile (hint: because button id doesn't have number associated)
-            break;
-    }
+    // // Reduce Deck size based on screen to be displayed
+    // // Could be replaced with a CSS option
+    cards = cards.slice(start, end);
     
 
     // console.log("Cards: ", cards);

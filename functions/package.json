@@ -14,7 +14,6 @@
   },
   "main": "lib/controller.js",
   "dependencies": {
-    "./variables": "1.0.1",
     "@types/express": "4.11.1",
     "@types/firebase": "3.2.1",
     "@types/jquery": "^3.3.32",
@@ -22,7 +21,8 @@
     "firebase-admin": "^8.6.0",
     "firebase-functions": "^3.3.0",
     "jquery": "^3.4.1",
-    "axios": "0.19.2"
+    "axios": "0.19.2",
+    "square-connect": "2.20200122.0"
   },
   "devDependencies": {
     "tslint": "^5.12.0",

@@ -10,8 +10,6 @@ interface menuHeader {
     origin: string;
     abv: string;
 }
-
-
 // Can be used for header of table:
 // Key coordinates with keys in Beer objects, values are for the display to render
 // create this based on results of board custom fields? screw up the order?
@@ -24,6 +22,11 @@ const menuHeader = {
     origin: "Origin",
     abv: "%ABV",
 }
+
+
+
+//////////////////////////   Pricing  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
 // Determines markup when calculating price based on cost: priceOz = costOz / markUp
 // priceOz = costOz / markUp
 const markUp = {
@@ -45,7 +48,8 @@ const plusValue = {
 const roundValue = 4;
 // Minimum price for something with alcohol on draft is $5
 const minPrice = 5;
-// How to get growler price
+
+// How to calculate growler price
 const growlerCalc = {
   "pintToGrowler" : 2.75,   // Based on price for a pint
   "ozToGrowler" : 44        // Based on cost/oz (if standard size is not 16oz)
@@ -58,21 +62,23 @@ const growlerCalc = {
 
 
 
-// Trello Information
+
+
+/////////////////////////// Trello Information  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 const key = "a211f4aca7fb3e521d652730dd231cb6"; // unknown who this belongs to..chuckskegs@gmail.com?
 const token = "ae6ebe60b45abcd2d4aa945c9ab4c4571bd6b6f7856b1df0cd387fbffc649579";
 // Location Specific
 const GW = {
     locationId : '9ESY9PNCR27FK',           // GW Square Location id
     list : '54ab33ba0fd047932d812777',   // GW Trello Keg List
-    // list2 : '5e1f9e54f5719012a69fba14',   // GW Same-Day Trello List
+    list2 : '5e1f9e54f5719012a69fba14',   // GW Same-Day Trello List
     // list1 : '5e1f9e54f5719012a69fba14',   // GW Same-Day Trello List
     board : '54ab339ee8e7ddb91a778d68'   // GW Trello Board
 }
 const CD = {
     locationId : 'EX68G9X85NXSX',           // CD Square Location id
     list : '5592b25a535fb4a14dea3bbf',   // CD Trello Kegs List
-    // list2 : '5816346a1b9cf1166c582c8d',   // CD Soft Drinks List
+    list2 : '5816346a1b9cf1166c582c8d',   // CD Soft Drinks List
     board : '54ab2dc27a5de0dd1a9cd67b'   // CD Trello Board
 }
 

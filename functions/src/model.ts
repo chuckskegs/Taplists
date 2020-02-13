@@ -10,9 +10,10 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
     // Checks if index exists (first expression) and then considers the second statement
     !isNaN(index) && (this.tap = (index + 1));
     // (index!)? this.tap = (index + 1): undefined;
-    if (card.name.charAt(0) == "_" || card.name.charAt(0) == "-") {
+    if (card.name.charAt(0) === "_" || card.name.charAt(0) === "-") {
         return;
     }
+    
     let cardCustoms = card.customFieldItems;    
     // if (index == 0) {console.log("Card Customs ", cardCustoms)};
     
@@ -23,7 +24,7 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
         let fieldName = customDef[customInfo.idCustomField].name;
         
         // what does this do again?
-        let found = Object.keys(menuHeader).find((key: string) => (menuHeader as any)[key] == fieldName);
+        const found = Object.keys(menuHeader).find((key: string) => (menuHeader as any)[key] === fieldName);
         if (found) {fieldName = found};
         
 
@@ -32,7 +33,7 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
             // @ts-ignore
             // Sets property and value for those fields which DON'T use drop-down menu [text, number, checkbox, etc]
             this[fieldName] = customInfo.value[Object.keys(customInfo.value)[0]];     // checked = 5d38ec25bc83063847ea4910
-        } else if (fieldName == "Color") { // "Color" is Trello field for beer type
+        } else if (fieldName === "Color") { // "Color" is Trello field for beer type
             // @ts-ignore
             this.type = customDef[customInfo.idCustomField][customInfo.idValue].value;       
             // @ts-ignore
@@ -58,7 +59,7 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
     }
     // this.price = this["Keg$"];
     // Calculates price based on keg size, keg cost, and serving size
-    let price = calculatePrice(this);
+    const price = calculatePrice(this);
     price * 2; //temp
     // this.growler = `N/A`;
     // Set growler price based on normal price, serving size, size of keg, and cost
@@ -86,9 +87,11 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
 
 
 
+
+
 const calculatePrice = (beer: any) => {
-    // Determine Oz's in keg based on size
-    switch (beer["Size"]) {
+    // Determine Oz's in keg based on keg size
+    switch (beer["Size"]) { 
         case `1/6, 20L, 5.16G`:
             beer.oz = 660;
             break;
@@ -107,24 +110,27 @@ const calculatePrice = (beer: any) => {
     }
     // Set cost based on keg price and ounces received
     beer.costOz = beer["Keg$"] / beer.oz;
-    // Set Price per Oz based on markup value
+    // Set Price per Oz based on markup value [separately determined by keg size]
     beer.priceOz = beer.costOz / (markUp as any)[beer.oz];
 
 
-    // Uses special field to make adjustments to price
-    if (beer.Special == "Nitro") {
-        // beer.Serving = "16 oz";
+    // Uses "Special" field from Trello to make adjustments to price
+    if (beer.Special === "Nitro") {
         //@ts-ignore
-        // this overrides if any nitro serving sizes are other than 20oz. I was told this would never happen but they had 8oz Nitro's for Fort George event (2/7/20)
-        beer.price = beer.priceOz * 16 + plusValue[beer.Special];   //<--- add a dollar to nitro?
-        // beer.Serving = "20 oz";
+        // This overrides if any nitro serving sizes are other than 20oz. They had 8oz Nitro's for Fort George event (2/7/20)
+        beer.price = beer.priceOz * 16 + plusValue[beer.Special];   //<--- add a dollar to nitro
     } else {
         //@ts-ignore
+        // Set price price based on serving size, price per oz, and additional base price (plusValue)
         beer.price = beer.priceOz * parseInt(beer.serving) + plusValue[beer.oz];  
     }
+    // Round up [to nearest quarter ($0.25)] and don't let it be less than the minimum price allowed [$5.00]
     beer.price = Math.max(Math.ceil(beer.price * roundValue)/roundValue, minPrice);
     return beer.price;
 };
+
+
+
 
 
 

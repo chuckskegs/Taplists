@@ -111,7 +111,7 @@ table tfoot .links button {
     visibility: visible;
   }
   .displayButtons {
-    visibility: hidden;
+    visibility: collapse;
   }
 }
 

@@ -1,18 +1,45 @@
-// // square-connect only for server side?
 
+import { CatalogApi, ApiClient } from 'square-connect';
 
-// // import SquareConnect from "node_modules/square-connect/src/";
-
-// const SquareConnect = require('square-connect');// from "square-connect"; // For Node.js runtime
-
-// const defaultClient = SquareConnect.ApiClient.instance;
-
-// const accessToken = "Bearer EAAAEAc8bQK1bCNQkoHHHqSlwIAiy2gEB-g8EtRqX0EVkYOlITOo_2yeZLsdEgS1"
+const defaultClient = ApiClient.instance;
+const accessToken = "Bearer EAAAEAc8bQK1bCNQkoHHHqSlwIAiy2gEB-g8EtRqX0EVkYOlITOo_2yeZLsdEgS1"
 // const client_id = "sq0idp-GNJz38YO42bc95-iOPHyLQ"; // application id
+// Configure OAuth2 access token for authorization: oauth2
+const oauth2 = defaultClient.authentications["oauth2"];
+oauth2.accessToken = accessToken;
 
+const api = new CatalogApi();
+api.listCatalog().then().catch();
+
+
+// // For Sandbox Mode
+// import SquareConnect from 'square-connect';
+// var defaultClient = SquareConnect.ApiClient.instance;
+// // Set sandbox url
+// defaultClient.basePath = 'https://connect.squareupsandbox.com';
 // // Configure OAuth2 access token for authorization: oauth2
-// const oauth2 = defaultClient.authentications["oauth2"];
-// oauth2.accessToken = accessToken;
+// var oauth2 = defaultClient.authentications['oauth2'];
+// // Set sandbox access token
+// oauth2.accessToken = "YOUR SANDBOX ACCESS TOKEN";
+// // Pass client to API
+// var api = new SquareConnect.LocationsApi();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

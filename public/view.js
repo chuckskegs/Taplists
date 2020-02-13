@@ -112,4 +112,4 @@ document.addEventListener('DOMContentLoaded', initiateTable);
 (_f = document.getElementById('GW1')) === null || _f === void 0 ? void 0 : _f.addEventListener('click', loadDisplay);
 (_g = document.getElementById('GW2')) === null || _g === void 0 ? void 0 : _g.addEventListener('click', loadDisplay);
 (_h = document.getElementById('GW')) === null || _h === void 0 ? void 0 : _h.addEventListener('click', loadDisplay);
-(_j = document.getElementById('Refresh')) === null || _j === void 0 ? void 0 : _j.addEventListener('click', loadGW);
+(_j = document.getElementById('Refresh')) === null || _j === void 0 ? void 0 : _j.addEventListener('click', function () { return alert("Refreshing..."); }); //lol

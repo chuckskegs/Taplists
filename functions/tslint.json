@@ -60,10 +60,10 @@
 
     "unified-signatures": {"severity": "warning"},
 
-    "prefer-const": {"severity": "warning"},
+    "prefer-const": {"severity": "off"},
 
     "trailing-comma": {"severity": "warning"}
   },
 
-  "defaultSeverity": "error"
+  "defaultSeverity": "warning"
 }
