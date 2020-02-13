@@ -1,14 +1,57 @@
 
 See current webhooks on Trello: https://api.trello.com/1/tokens/ae6ebe60b45abcd2d4aa945c9ab4c4571bd6b6f7856b1df0cd387fbffc649579/webhooks/?key=a211f4aca7fb3e521d652730dd231cb6
 
+Add buttons that are only visible in mobile? Done. (2/12)
+
+Transition to loading all data at the beginning (asynchronously and then storing with firebase) then displaying data when selection is made
+
+Add firebase to webapp: to get it to react to webhooks?
+https://firebase.google.com/docs/functions/callable
+DOM:
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-functions.js"></script>
+Import: 
+// npm install firebase --save
+const firebase = require("firebase");
+// Required for side-effects
+require("firebase/functions");
+Initialize: 
+firebase.initializeApp({
+  apiKey: '### FIREBASE API KEY ###',
+  authDomain: '### FIREBASE AUTH DOMAIN ###',
+  projectId: '### CLOUD FUNCTIONS PROJECT ID ###'
+  databaseURL: 'https://### YOUR DATABASE NAME ###.firebaseio.com',
+});
+// Initialize Cloud Functions through Firebase
+var functions = firebase.functions();
+Call:
+var addMessage = firebase.functions().httpsCallable('addMessage');
+addMessage({text: messageText}).then(function(result) {
+  // Read result of the Cloud Function.
+  var sanitizedMessage = result.data.text;
+  // ...
+}).catch(function(error) {
+  // Getting the Error details.
+  var code = error.code;
+  var message = error.message;
+  var details = error.details;
+  // ...
+});
+
+
+
+
+
 Use something like this to differentiate between media types?
 See: https://developer.mozilla.org/en-US/docs/Web/CSS/At-rule#Conditional_group_rules
 <link rel="stylesheet" href="style.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="style.css" type="text/css" media="print" />
 
-external style stylesheet
+
+External style stylesheet
 <link rel="stylesheet" href="https://unpkg.com/marx-css/css/marx.min.css">
 npm install marx-css
+
 
 
 Modules:

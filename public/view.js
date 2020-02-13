@@ -1,6 +1,6 @@
 "use strict";
 // Uses data provided to display an HTML table
-var _a, _b, _c, _d, _e, _f, _g;
+var _a, _b, _c, _d, _e, _f, _g, _h, _j;
 // Can be used for header of table:
 // Key coordinates with keys in Beer objects, values are for the display to render
 // create this based on results of board custom fields? screw up the order?
@@ -24,16 +24,42 @@ var initiateTable = function () {
     // myEvents().then(generateTable).catch((err) => alert(err));
     // myEvents(calId).then(generateTable);
 };
+//  Could do something that uses request information to identify which button was pressed?
 // "GW Events" onClick
-var loadGW = function () {
-    // gwEvents().then(generateTable).catch((err) => alert(err));
-    $.get("/gw-taps").then(generateTable);
-};
+var loadGW = function () { $.get("/gw1").then(generateTable); };
 // "CD Events" onClick
-var loadCD = function () {
-    // cdEvents().then(generateTable).catch((err) => alert(err));
-    $.get("/cd-taps").then(generateTable);
-    // getData(CD).then(generateTable);
+var loadCD = function () { $.get("/cd1").then(generateTable); };
+var loadDisplay = function (req) {
+    // let endPoint;// = `req.target`;
+    // @ts-ignore: no id on type EventTarget
+    // switch (req.target.id) {
+    //     case 'CD1':
+    //         endPoint = "/cd-taps";
+    //         break;
+    //     case 'CD2':
+    //         endPoint = "/cd-taps";
+    //         break;
+    //     case 'CD3':
+    //         break;
+    //     case 'GW1':
+    //         break;
+    //     case 'GW2':
+    //         break;
+    //     default:
+    //         break;
+    // }
+    // @ts-ignore: no id on type EventTarget
+    // let buttonId = req.target.id;
+    // @ts-ignore: no id on type EventTarget
+    // Query parameters to be sent to server-side code
+    // Determines data to retrieve by the id of the button pressed
+    var query = { menu: req.target.id };
+    // extend to use more query information?
+    // Http request to express app in Controller.ts
+    // Request is for file in same directory root ending in '/data' with the query following a '?'
+    $.get("/data", query).then(generateTable);
+    // $("#lastRefresh").val("sup");// = Date.now().toLocaleString();
+    $("#lastRefresh").text("Last Refresh: " + new Date().toLocaleTimeString()); //toISOString().split('T')[1].split('.')[0]);    
 };
 // Rewrites table data
 var generateTable = function (data) {
@@ -78,10 +104,12 @@ var generateTable = function (data) {
 // based on "id" or other information from the element?
 // -- actually should request that data from the Controller?
 document.addEventListener('DOMContentLoaded', initiateTable);
-(_a = document.getElementById('CD1')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', loadCD);
-(_b = document.getElementById('CD2')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', loadCD);
-(_c = document.getElementById('CD3')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', loadCD);
-(_d = document.getElementById('CD4')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', loadCD);
-(_e = document.getElementById('GW1')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', loadGW);
-(_f = document.getElementById('GW2')) === null || _f === void 0 ? void 0 : _f.addEventListener('click', loadGW);
-(_g = document.getElementById('Refresh')) === null || _g === void 0 ? void 0 : _g.addEventListener('click', loadGW);
+(_a = document.getElementById('CD1')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', loadDisplay);
+(_b = document.getElementById('CD2')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', loadDisplay);
+(_c = document.getElementById('CD3')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', loadDisplay);
+(_d = document.getElementById('CD4')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', loadDisplay);
+(_e = document.getElementById('CD')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', loadDisplay);
+(_f = document.getElementById('GW1')) === null || _f === void 0 ? void 0 : _f.addEventListener('click', loadDisplay);
+(_g = document.getElementById('GW2')) === null || _g === void 0 ? void 0 : _g.addEventListener('click', loadDisplay);
+(_h = document.getElementById('GW')) === null || _h === void 0 ? void 0 : _h.addEventListener('click', loadDisplay);
+(_j = document.getElementById('Refresh')) === null || _j === void 0 ? void 0 : _j.addEventListener('click', loadGW);

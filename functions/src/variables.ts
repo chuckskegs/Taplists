@@ -1,5 +1,6 @@
 //variables
 
+////////////////////  Interface  \\\\\\\\\\\\\\\\\\\\\\\
 interface menuHeader {
     tap: string;
     beer: string;
@@ -14,14 +15,14 @@ interface menuHeader {
 // Can be used for header of table:
 // Key coordinates with keys in Beer objects, values are for the display to render
 // create this based on results of board custom fields? screw up the order?
-const menuHeader: menuHeader = {
-    tap: "Tap" as string,
-    beer: "Beer" as string,
-    serving: "Serving" as string,
-    price: "Price" as string,
-    growler: "Growler" as string,
-    origin: "Origin" as string,
-    abv: "%ABV" as string,
+const menuHeader = {
+    tap: "Tap",
+    beer: "Beer",
+    serving: "Serving",
+    price: "Price",
+    growler: "Growler",
+    origin: "Origin",
+    abv: "%ABV",
 }
 // Determines markup when calculating price based on cost: priceOz = costOz / markUp
 // priceOz = costOz / markUp

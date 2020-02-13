@@ -28,22 +28,50 @@ const initiateTable = () => {
     // myEvents(calId).then(generateTable);
 }
 
+//  Could do something that uses request information to identify which button was pressed?
 // "GW Events" onClick
-const loadGW = () => {
-    // gwEvents().then(generateTable).catch((err) => alert(err));
-
-    $.get("/gw-taps").then(generateTable);
-
-}
+const loadGW = () => { $.get("/gw1").then(generateTable); }
 
 // "CD Events" onClick
-const loadCD = () => {
-    // cdEvents().then(generateTable).catch((err) => alert(err));
+const loadCD = () => { $.get("/cd1").then(generateTable); }
 
-    $.get("/cd-taps").then(generateTable);
+const loadDisplay = (req: MouseEvent) => { 
+    // let endPoint;// = `req.target`;
+    // @ts-ignore: no id on type EventTarget
+    // switch (req.target.id) {
+    //     case 'CD1':
+    //         endPoint = "/cd-taps";
+    //         break;
+    //     case 'CD2':
+    //         endPoint = "/cd-taps";
+    //         break;
+    //     case 'CD3':
 
-    // getData(CD).then(generateTable);
-}
+    //         break;
+    //     case 'GW1':
+
+    //         break;
+    //     case 'GW2':
+
+    //         break;
+    //     default:
+    //         break;
+    // }
+
+    // @ts-ignore: no id on type EventTarget
+    // let buttonId = req.target.id;
+    // @ts-ignore: no id on type EventTarget
+    // Query parameters to be sent to server-side code
+    // Determines data to retrieve by the id of the button pressed
+    let query = { menu: req.target.id };
+    // extend to use more query information?
+    
+    // Http request to express app in Controller.ts
+    // Request is for file in same directory root ending in '/data' with the query following a '?'
+    $.get(`/data`, query).then(generateTable);
+    // $("#lastRefresh").val("sup");// = Date.now().toLocaleString();
+    $("#lastRefresh").text(`Last Refresh: ${new Date().toLocaleTimeString()}`);//toISOString().split('T')[1].split('.')[0]);    
+};
 
 
 
@@ -99,10 +127,12 @@ const generateTable = (data: object[]) => {
 // based on "id" or other information from the element?
 // -- actually should request that data from the Controller?
 document.addEventListener('DOMContentLoaded', initiateTable);
-document.getElementById('CD1')?.addEventListener('click', loadCD);
-document.getElementById('CD2')?.addEventListener('click', loadCD);
-document.getElementById('CD3')?.addEventListener('click', loadCD);
-document.getElementById('CD4')?.addEventListener('click', loadCD);
-document.getElementById('GW1')?.addEventListener('click', loadGW);
-document.getElementById('GW2')?.addEventListener('click', loadGW);
+document.getElementById('CD1')?.addEventListener('click', loadDisplay);
+document.getElementById('CD2')?.addEventListener('click', loadDisplay);
+document.getElementById('CD3')?.addEventListener('click', loadDisplay);
+document.getElementById('CD4')?.addEventListener('click', loadDisplay);
+document.getElementById('CD')?.addEventListener('click', loadDisplay);
+document.getElementById('GW1')?.addEventListener('click', loadDisplay);
+document.getElementById('GW2')?.addEventListener('click', loadDisplay);
+document.getElementById('GW')?.addEventListener('click', loadDisplay);
 document.getElementById('Refresh')?.addEventListener('click', loadGW);

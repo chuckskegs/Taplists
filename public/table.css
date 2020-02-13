@@ -94,8 +94,9 @@ table tfoot .links button {
   font-size: 200%;
 }
 
+
 /* Mobile View */
-@media (max-width: 1000px) {
+@media (max-width: 999px) {
   .beer {
     color: fuchsia;
     
@@ -105,6 +106,19 @@ table tfoot .links button {
   }
   .beer, .serving, .price, .abv {
     font-size: 14px;
+  }
+  .mobileButtons {
+    visibility: visible;
+  }
+  .displayButtons {
+    visibility: hidden;
+  }
+}
+
+/* Display/Desktop */
+@media (min-width: 1000px) {
+  .mobileButtons {
+    visibility: hidden;
   }
 }
 

@@ -7,7 +7,9 @@ import { growlerCalc, minPrice, roundValue, plusValue, markUp, menuHeader } from
 // Order Matters
 // Make Beer objects from Trello JSON information
 const Beer = function (this: any, card: any, customDef: any, index: number) {
-    this.tap = (index + 1);
+    // Checks if index exists (first expression) and then considers the second statement
+    !isNaN(index) && (this.tap = (index + 1));
+    // (index!)? this.tap = (index + 1): undefined;
     if (card.name.charAt(0) == "_" || card.name.charAt(0) == "-") {
         return;
     }
@@ -63,6 +65,7 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
     if (this.NoGr) {
         this.growler = `N/A`;
     } else {
+        // change to ceil when possible
         this.growler = Math.ceil(this.priceOz * growlerCalc.ozToGrowler);
     }
 

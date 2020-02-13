@@ -3,6 +3,9 @@
   <head>
     <!-- Page Title for top of browser -->
     <title>Welcome to Chuck's Taplist</title>
+    <!-- refresh attempt -->
+    <script type="text/javascript"> setInterval("location.reload();return false;",5000); </script>
+
     <meta charset="utf-8" />
     <!-- Favicon -->
     <!-- <link
@@ -81,14 +84,16 @@
         <tr>
           <td colspan="7">
             <div class="links">
-              <button id="CD1">CD 1-25</button>
-              <button id="CD2">CD 26-50</button>
-              <button id="CD3">CD 51+</button>
+              <button id="CD1" class="displayButtons">CD 1-25</button>
+              <button id="CD2" class="displayButtons">CD 26-50</button>
+              <button id="CD3" class="displayButtons">CD 51+</button>
+              <button id="CD" class="mobileButtons">Central District</button>
               <button id="CD4" style="visibility: hidden;">CD Bottles</button>
-              <button id="GW1">GW 1-25</button>
-              <button id="GW2">GW 26-50</button>
-              <button id="Refresh">Refresh</button>
-              <a id="lastRefresh"></a>
+              <button id="GW1" class="displayButtons">GW 1-25</button>
+              <button id="GW2" class="displayButtons">GW 26-50</button>
+              <button id="GW" class="mobileButtons">Greenwood</button>
+              <button id="Refresh" style="visibility: hidden;">Refresh</button>
+              <a id="lastRefresh">hello</a>
             </div>
           </td>
         </tr>
