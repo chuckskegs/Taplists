@@ -1,20 +1,5 @@
-// import {  } from "./variables";
-import { CD, GW, key, token, growlerCalc, minPrice, roundValue, plusValue, markUp, menuHeader, sampleObj } from "./variables";
+import { growlerCalc, minPrice, roundValue, plusValue, markUp, menuHeader } from "./variables";
 
-const fieldType = {
-    
-}
-// Declare so can created once and shared?
-// let customDef = {};
-
-
-    // $.getJSON(getUrl(list)).then(res => res).catch((err) => err);
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // // Constructor: Creates event object
 // //////////////
@@ -26,26 +11,17 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
     if (card.name.charAt(0) == "_" || card.name.charAt(0) == "-") {
         return;
     }
-    // if (card.name.indexOf("_")) { return; };
-    let cardCustoms = card.customFieldItems;
-    
-    if (index == 0) {console.log("Card Customs ", cardCustoms)};
+    let cardCustoms = card.customFieldItems;    
+    // if (index == 0) {console.log("Card Customs ", cardCustoms)};
     
     // @ts-ignore
     // console.log("Here: ", customDef[cardCustoms[0].idCustomField].name);
     // Analyze and translate custom field information from Trello Cards
     cardCustoms.map((customInfo: any) => {
-        // @ts-ignore
         let fieldName = customDef[customInfo.idCustomField].name;
-        // let sameName = Object.entries(menuHeader).find(fieldName);
-        // console.log(sameName);
         
-        // if () {}
-        // @ts-ignore
-        // if (Object.values(menuHeader).includes(fieldName))  { 
         // what does this do again?
-        let found = Object.keys(menuHeader).find((key) => menuHeader[key] == fieldName);
-
+        let found = Object.keys(menuHeader).find((key: string) => (menuHeader as any)[key] == fieldName);
         if (found) {fieldName = found};
         
 
@@ -108,7 +84,6 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
 
 
 const calculatePrice = (beer: any) => {
-    //kegPrice, kegSize, servingSize
     // Determine Oz's in keg based on size
     switch (beer["Size"]) {
         case `1/6, 20L, 5.16G`:
@@ -127,12 +102,13 @@ const calculatePrice = (beer: any) => {
             console.log("Unknown Size ", beer.Size);
             break;
     }
+    // Set cost based on keg price and ounces received
     beer.costOz = beer["Keg$"] / beer.oz;
-    // Set Price based on markup value
+    // Set Price per Oz based on markup value
     beer.priceOz = beer.costOz / (markUp as any)[beer.oz];
 
 
-    // copied, need to test
+    // Uses special field to make adjustments to price
     if (beer.Special == "Nitro") {
         // beer.Serving = "16 oz";
         //@ts-ignore
@@ -156,12 +132,12 @@ const calculatePrice = (beer: any) => {
 // Returns object with keys [field id] and values [customField info]
 const getCustomDefinition = (array: any[]) => {
     let newObj = {};
-    console.log("Custom Field Information: ", array);
+    // console.log("Custom Field Information: ", array);
     
-    // Creaes an object with custom information
     // @ts-ignore
+    // Creaes an object with custom information
     array.map((obj) => { newObj[obj.id] = new CustomField(obj); });
-    console.log("My Custom Field Object: ", newObj);
+    // console.log("My Custom Field Object: ", newObj);
     return newObj;
 }
 
@@ -186,59 +162,6 @@ const CustomField = function (this: any, field: any) {
         // case `undefined`:
     }
 }
-/*
-{
-5d38ec25bc83063847ea490c: "Size",
-5d38ec518206f9580fe0c2d1: "Keg$",
-5d38ec640b0fd97a06599fd9: "Origin",
-5d38ecad5ce5b65075ead734: "Color",
-5d38eccadc85c34e2612307c: "Special",
-5d38ecdd10b9290bb15fafca: "%ABV",
-5d38ece8f4c30a1e94cdb292: "Serving",
-5d38ed61e08e962c5520afe2: "NoGr",
-5e307ea4ffc3516ce293ee93: "$Override",
-}
-
-|
-to
-|
-v
-
-{
-    5d38ec25bc83063847ea490c: { 
-        name: "Size",
-        5d38ec25bc83063847ea4910: {
-            value: "1/2, 58L, 15.5G",
-            color: "Green" }
-        5d38ec25bc83063847ea490f: {
-            value: "50L, 13.2G",
-            color: "Yellow" }
-        5d38ec25bc83063847ea490e: {
-            value: "1/4, 30L, 7.75G",
-            color: "Pink" }
-        5d38ec25bc83063847ea490d: {
-            value: "1/6, 20L, 5.16G",
-            color: "Blue"}
-    }
-    5d38ec518206f9580fe0c2d1: "Keg$",
-    5d38ec640b0fd97a06599fd9: "Origin",
-    5d38ecad5ce5b65075ead734: "Color",
-    5d38eccadc85c34e2612307c: "Special",
-    5d38ecdd10b9290bb15fafca: "%ABV",
-    5d38ece8f4c30a1e94cdb292: "Serving",
-    5d38ed61e08e962c5520afe2: "NoGr",
-    5e307ea4ffc3516ce293ee93: "$Override",
-}
-
-*/
-
-
-
-
-
-
-
-
 
 
 
