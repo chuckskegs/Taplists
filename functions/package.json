@@ -22,7 +22,8 @@
     "firebase-functions": "^3.3.0",
     "jquery": "^3.4.1",
     "axios": "0.19.2",
-    "square-connect": "2.20200122.0"
+    "square-connect": "2.20200122.0",
+    "uuid": "6.0.2"
   },
   "devDependencies": {
     "tslint": "^5.12.0",

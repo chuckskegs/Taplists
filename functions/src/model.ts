@@ -3,8 +3,11 @@ import { CD, GW, key, token, growlerCalc, minPrice, roundValue, plusValue, markU
 // Http request-sending node module to communicate with Trello and Square
 import http, { AxiosResponse, AxiosError } from 'axios';  // - need to use response.data to access the information
 
-// asynchronized!
-// Returns current taplist data based on query parameter provided
+
+/**
+ * asynchronized!
+ * Returns current taplist data based on query parameter provided
+ */
 async function getData (menu: string) {
     // Identifies shop and list to display from the menu query parameter
     // Checks if starts with GW such as GW1, GW2, etc. and set's shop value accordingly
@@ -48,12 +51,9 @@ async function getData (menu: string) {
     let url = () => `https://api.trello.com/1/boards/${shop.board}/customFields?key=${key}&token=${token}`;
     let customDef = await http.get(url()).then((res: AxiosResponse) => getCustomDefinition(res.data)).catch((err: AxiosError) => err.message);
     
-    
-    
     // Creates an array of Beer objects 
     // Looks at each card from Trello and creates Beer objects using the definitions made
     let cards = jsonDeck.map((card: any, index: number) => new (Beer as any)(card, customDef, index));
-    
 
     // // Reduce Deck size based on screen to be displayed
     // // Could be replaced with a CSS option
@@ -62,12 +62,15 @@ async function getData (menu: string) {
 }
 
 
-
-
-
-// This is where we add parameters to the object that can be used in the future
-// Order Matters
-// Make Beer objects from Trello JSON information
+/** @description
+  * This is where we add properties to the object that can be used in the future.
+  * Order Matters.
+  * Make Beer objects from Trello JSON information.
+  * @param {object} card The json object representing Trello card
+  * @param {object} customDef The definitions object created
+  * @param {number} index [Optional] The current index in array
+  * @todo convert to a class
+  */
 const Beer = function (this: any, card: any, customDef: any, index: number) {
     // (index!)? this.tap = (index + 1): undefined;
     if (card.name.charAt(0) === "_" || card.name.charAt(0) === "-") {
@@ -83,8 +86,8 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
     cardCustoms.map((customInfo: any) => {
         let fieldName = customDef[customInfo.idCustomField].name;
         
-        // what does this do again?
-        const found = Object.keys(menuHeader).find((key: string) => (menuHeader as any)[key] === fieldName);
+        // If there is a Value in menuHeader with same name, apply the name of the Key instead (ex. "%ABV" => "abv")
+        const found = Object.keys(menuHeader).find((title: string) => (menuHeader as any)[title] === fieldName);
         if (found) {fieldName = found};
         
 
@@ -147,7 +150,11 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
 
 
 
-
+/**
+ * Uses Beer object properties to determine price calculation
+ * @param { Object } Beer 
+ * @returns { number } Price
+ */
 const calculatePrice = (beer: any) => {
     // Determine Oz's in keg based on keg size
     switch (beer["Size"]) { 
@@ -192,8 +199,7 @@ const calculatePrice = (beer: any) => {
 
     // If override value exists (from Trello) return that value istead of normal price calculation
     return (!beer[`$Override`]) ? beer.price : beer[`$Override`];
-    // return beer.price;
-
+    // return beer[`$Override`] || beer.price;  
 };
 
 
@@ -202,10 +208,12 @@ const calculatePrice = (beer: any) => {
 
 
 
-/////////////////////////// Custom Definition Management \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-// Recieves array of objects (customField descriptors)
-// Returns object with keys [field id] and values [customField info]
+/////////////////////////// Custom Definition Management \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+/** 
+ * Recieves array of objects (customField descriptors)
+ * Returns object with keys [field id] and values [customField info]
+ * @param {array} jsonArray
+ */
 const getCustomDefinition = (array: any[]) => {
     let newObj = {};
     // console.log("Custom Field Information: ", array);
@@ -217,8 +225,13 @@ const getCustomDefinition = (array: any[]) => {
     return newObj;
 }
 
-// Accepts object representing Trello custom field
-// Creates new object with a name field, 
+
+
+/**
+ * Accepts object representing Trello custom field
+ * Creates new object with a name field directing to values
+ * @todo convert to a class
+ */
 const CustomField = function (this: any, field: any) {
 
     this.name = field.name;
