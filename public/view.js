@@ -57,7 +57,7 @@ var generateTable = function (data) {
             // Adds three classes to the cell, could inherit from the parent...
             cell.className = key + " row" + row.rowIndex + " " + obj.type;
             // @ts-ignore
-            // Add styling class based on a condition
+            // Add styling class to all cells in row based on a condition
             if (obj.serving != "16 oz") {
                 cell.className += " differentSize";
             }
@@ -65,6 +65,10 @@ var generateTable = function (data) {
             cell.style.color = obj.color;
             //////////////////////////// class name vvv     
             // console.log(cell.className);
+            // Read "N/A" if growler price is 0
+            if (eventDetail === 0) {
+                eventDetail = "N/A";
+            }
             cell.textContent = eventDetail;
             row.appendChild(cell);
         });

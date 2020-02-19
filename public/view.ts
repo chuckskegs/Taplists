@@ -71,7 +71,7 @@ const generateTable = (data: object[]) => {
             cell.className = `${key} row${row.rowIndex} ${obj.type}`;
             
             // @ts-ignore
-            // Add styling class based on a condition
+            // Add styling class to all cells in row based on a condition
             if (obj.serving != "16 oz") {
                 cell.className += " differentSize";
             }
@@ -79,6 +79,10 @@ const generateTable = (data: object[]) => {
             cell.style.color = obj.color;
        //////////////////////////// class name vvv     
             // console.log(cell.className);
+            // Read "N/A" if growler price is 0
+            if (eventDetail === 0) {
+                eventDetail = "N/A";
+            }
             cell.textContent = eventDetail;
             row.appendChild(cell);
         });

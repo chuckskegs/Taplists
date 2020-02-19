@@ -7,12 +7,17 @@ import http, { AxiosResponse, AxiosError } from 'axios';  // - need to use respo
 /**
  * asynchronized!
  * Returns current taplist data based on query parameter provided
+ * @param {string} menu The query selecting which data to retrieve
+ * @example `GW` | `CD` Returns entire list
  */
-async function getData (menu: string) {
+async function getData (menu: string, myList?: string) {
     // Identifies shop and list to display from the menu query parameter
     // Checks if starts with GW such as GW1, GW2, etc. and set's shop value accordingly
     let shop = menu.startsWith('GW') ? GW : CD;
     let list = shop.list;
+    
+    // Set list if parameter provided
+    if (myList) {list = myList};
     
 
     ////// Filter for Screen \\\\\\
@@ -38,7 +43,7 @@ async function getData (menu: string) {
             list = shop.list2;         
             break;    
         default:
-            // Use all the cards for mobile (hint: because button id doesn't have number associated)
+            // Use all the cards when number not included: ex. for Square and mobile view (hint: because button id doesn't have number associated)
             break;
     }
 
@@ -127,7 +132,7 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
     // this.growler = `N/A`;
     // Set growler price based on normal price, serving size, size of keg, and cost
     if (this.NoGr) {
-        this.growler = `N/A`;
+        this.growler = 0;
     } else {
         // change to ceil when possible
         this.growler = Math.ceil(this.priceOz * growlerCalc.ozToGrowler);
