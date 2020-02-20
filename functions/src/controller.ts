@@ -6,9 +6,8 @@ const app = express();
 
 // My imports
 import { getData } from "./model";
-import updateSquare from './square';
-import { GW, CD } from './variables';
-
+import { updateSquare, helper } from './square';
+import { GW, CD, square } from './variables';
 
 
 /**
@@ -57,17 +56,20 @@ app.get('/update', (request: express.Request, response: express.Response) => {
         dataPromise.length;
     }
 
-    dataPromise("CD3", CD);
+    // dataPromise("CD3", CD);
+
     // Run them
-    // // Needs helper function
-    // let fullArray: any[] = [];
-    // const allData = Promise.all([getData("CD").then(helper), getData("CD3").then(helper)]).then(res => fullArray.concat(...res)).catch(console.error);
-    // // @ts-ignore
-    // allData.then((allCards: object[]) => {
-    //     console.log(allCards);
-        
-    //     updateSquare(allCards, CD).then(res => response.send(res)).catch(console.error);
-    // }).catch(console.error);
+    // Needs helper function
+    let fullArray: any[] = [];
+    const allData = Promise.all([getData("CD"), getData("CD3")]).then(res => fullArray.concat(...res)).catch(console.error);
+    // @ts-ignore
+    let ids = square.testIds;
+    // uses data that has been merged into one array with each card storing it's own version number
+    allData.then((res: any) => helper(res, ids)).then((allCards: object[]) => {
+        // console.log(allCards);
+        // response.send(allCards)
+        updateSquare(allCards, CD).then(res => response.send(res)).catch(console.error);
+    }).catch((err) => {console.error(err); response.send(`${err}`)});
     
     
     // dataPromise("CD", CD);
@@ -76,17 +78,6 @@ app.get('/update', (request: express.Request, response: express.Response) => {
         // }).catch(err => console.log(err));
     
 });
-
-
-// // Currently need a helper function to add the Square ITEM's variation property to the objects
-// const helper = (dataResponse) => {
-
-//     return dataResponse;
-// }
-
-
-
-
 
 
 

@@ -21,19 +21,26 @@ const api = new CatalogApi();
  * @param {object[]} taplist An array of beer objects with relevant information from Trello
  * @param {any} shop The object with shop information to access
  */
-const updateSquare = async (taplist: object[], shop: any) => {
+const updateSquare = async (taplist: any[], shop: any) => {
     // return taplist;
     // Retrieve batch of catalog objects to get Version number for overwriting
     let body = new BatchRetrieveCatalogObjectsRequest();
     body.object_ids = square.testIds;                                     // Sandbox: Ids to use in search for version number
     // body.object_ids = shop.ids;
     let retrievedObjects = await api.batchRetrieveCatalogObjects(body);
+    console.log(retrievedObjects);
+    
     // Assign version number to property
-    try {
-        shop.version = retrievedObjects.objects![0].version;
-    } catch (error) {
-        console.log(error);
-    } 
+    taplist.map((tap, index) => {
+        try {
+            // @ts-ignore
+            tap.version = retrievedObjects.objects![index].version;
+            tap.itemId = retrievedObjects.objects![index].id;
+        } catch (error) {
+            // @ts-ignore
+            console.log(`Version Error: ${tap.beer}`, retrievedObjects.objects);
+        }
+    });
     
     
     
@@ -59,10 +66,48 @@ const updateSquare = async (taplist: object[], shop: any) => {
         console.log("Api call successfull..");
         console.log("First 10 IDs: ", ids?.slice(0,10));
         return ids;
-    }).catch((err) => [err.response.error, err]); 
+    }).catch((err) => [err.response.error.text, err]); 
      
     return upsertResponse;   
 }
+
+/**
+ * Currently need a helper function to add the Square ITEM's variation property to the objects
+ * @param {string} ids Array of strings with ids to retrieve version number
+ * @param {Beer} dataResponse The array of objects to add the version number to
+ * @returns {Beer} Same data with added version property
+ */ 
+const helper = async (dataResponse: any[], ids: string[]) => {
+    return dataResponse;
+    let body: BatchRetrieveCatalogObjectsRequest = {
+        object_ids: ids
+    };
+    let retrievedObjs = await api.batchRetrieveCatalogObjects(body);
+    
+    // let version = retrievedObjs.objects![0].version;
+    // return retrievedObjs;
+    console.log("Data Size Difference (Trello - Square)", dataResponse.length - retrievedObjs.objects!.length);
+    
+    // Trys to add version number
+    let notAdded: string[] = []; // Debugging logs
+    let versions: (number | undefined)[] = [];
+    dataResponse.map((beer, index) => {
+        try {
+            beer.version = retrievedObjs.objects![index].version;
+            versions.push(retrievedObjs.objects![index].version);
+        } catch (error) {
+            notAdded.push(beer.beer);
+        } 
+        return beer;
+    });
+    console.log(`Version Not Added (${notAdded.length}): `, notAdded);
+    let filtered = retrievedObjs.objects?.map(elem => elem.version);
+    filtered?.forEach((elem, index) => (elem === versions[index])? null : console.log("Not the same version: ", dataResponse[index]));
+    console.log(`Versions: ${versions}`);
+    
+    return dataResponse;
+}
+
 
 
 /**
@@ -80,15 +125,18 @@ const createSquareItem = (tap: any, index: number, shop: any) => {
     if (!tap.serving) {console.log(tap)}
     
     // If item doesn't exist, create new one with the "#" notation in front
-    let itemId = (square.testIds[index])? `${square.testIds[index]}` : `#new${uuid()}`;  // Sandbox: 
-    // let itemId = shop.ids[index];    
+    // let ids = square.testIds;                                               // Sandbox:
+    // let itemId = (ids[index])? `${ids[index]}` : `#new${uuid()}`;   
+
+console.log("hello:" ,tap.version);
+
 
     // Create new object
     let myObject: CatalogObject = {
         type: "ITEM",
-        id: `${itemId}`,  //shop.ids[index]
+        id: tap.itemId, //`${itemId}`,  //shop.ids[index]
         present_at_all_locations: true,
-        version: shop.version, // Gets version number by making retrieve request...buggy
+        version: tap.version, // Gets version number by making retrieve request...buggy
         // present_at_location_ids: [shop.locationId],
 
         // item_data: data
@@ -111,6 +159,9 @@ const createSquareItem = (tap: any, index: number, shop: any) => {
     myObject.item_data = data;
     return myObject;
 }
+
+
+
 
 // Returns array of Price objects
 const myPrices = (growler: any, serving: string, price: number) => {
@@ -174,4 +225,4 @@ const createVariation = (shop: any, itemId: string, variationName: string, varia
 
 
 
-export default updateSquare;
+export { updateSquare, helper };

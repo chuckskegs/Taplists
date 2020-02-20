@@ -1,5 +1,5 @@
 // My Variables
-import { CD, GW, key, token, growlerCalc, minPrice, roundValue, plusValue, markUp, menuHeader } from "./variables";
+import { Shop, CD, GW, key, token, growlerCalc, minPrice, roundValue, plusValue, markUp, menuHeader } from "./variables";
 // Http request-sending node module to communicate with Trello and Square
 import http, { AxiosResponse, AxiosError } from 'axios';  // - need to use response.data to access the information
 
@@ -74,13 +74,16 @@ async function getData (menu: string, myList?: string) {
   * @param {object} card The json object representing Trello card
   * @param {object} customDef The definitions object created
   * @param {number} index [Optional] The current index in array
-  * @todo convert to a class
+  * @todo Refactor to class
   */
-const Beer = function (this: any, card: any, customDef: any, index: number) {
+const Beer = function (this: any, card: any, customDef: any, shop: Shop, index: number) {
     // (index!)? this.tap = (index + 1): undefined;
     // Checks if index exists (first expression) and then considers the second statement
     !isNaN(index) && (this.tap = (index + 1));
     
+    // Set shop name to beer object for reference
+    this.shop = shop.name;
+
     let cardCustoms = card.customFieldItems;    
     
     // @ts-ignore
