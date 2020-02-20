@@ -4,6 +4,7 @@ import uuid from "uuid";
 
 const defaultClient = ApiClient.instance;
 // Configure OAuth2 access token for authorization: oauth2
+// shorter:  ApiClient.instance.authetications.oath2.accessToken = square.accessToken;
 const oauth2 = defaultClient.authentications["oauth2"];
 oauth2.accessToken = square.accessToken;
 // Sandbox setting: comment out these two lines to exit sandbox
@@ -11,20 +12,28 @@ defaultClient.basePath = 'https://connect.squareupsandbox.com';     // here
 oauth2.accessToken = square.sandboxToken;                           // here
 
 
-//shorter::  defaultClient.authetications.oath2.accessToken = square.accessToken;
 
-
+// Initialize api to be used
 const api = new CatalogApi();
-const updateSquare = async (taplist: any[], shop: any) => {
+/**
+ * Accepts array of objects 
+ * @returns {CatalogObject} Catalog object as a catalog item
+ * @param {object[]} taplist An array of beer objects with relevant information from Trello
+ * @param {any} shop The object with shop information to access
+ */
+const updateSquare = async (taplist: object[], shop: any) => {
+    // return taplist;
     // Retrieve batch of catalog objects to get Version number for overwriting
     let body = new BatchRetrieveCatalogObjectsRequest();
-    body.object_ids = square.testIds;                                     // Ids to use in search for version number
+    body.object_ids = square.testIds;                                     // Sandbox: Ids to use in search for version number
     // body.object_ids = shop.ids;
-    let oneObject = await api.batchRetrieveCatalogObjects(body);
+    let retrievedObjects = await api.batchRetrieveCatalogObjects(body);
     // Assign version number to property
-    square.testVersionNumber = oneObject.objects![0].version as number;   // <- Sandbox
-    shop.version = oneObject.objects![0].version;
-    // return await api.batchRetrieveCatalogObjects(body);
+    try {
+        shop.version = retrievedObjects.objects![0].version;
+    } catch (error) {
+        console.log(error);
+    } 
     
     
     
@@ -50,7 +59,7 @@ const updateSquare = async (taplist: any[], shop: any) => {
         console.log("Api call successfull..");
         console.log("First 10 IDs: ", ids?.slice(0,10));
         return ids;
-    }).catch((err) => Object.keys(err.response)); 
+    }).catch((err) => [err.response.error, err]); 
      
     return upsertResponse;   
 }
@@ -58,23 +67,28 @@ const updateSquare = async (taplist: any[], shop: any) => {
 
 /**
  * Uses tap information to return a Square object with appropriate information
+ * @returns {CatalogObject} Catalog object as a catalog item
  * @param {object} tap A beer object with relevant information from Trello
  * @param {number} index A count to help with debugging
  * @param {any} shop The object with shop information to access
  */
 const createSquareItem = (tap: any, index: number, shop: any) => {
     // Create array of Price objects { name: string, value: number }
+    // Name: To be listed as variation title
+    // Value: Price for that variation ($0 | free if unavailable)
     let prices = myPrices(tap.growler, tap.serving, tap.price);
-    // console.log("Test: ", prices);
+    if (!tap.serving) {console.log(tap)}
     
+    // If item doesn't exist, create new one with the "#" notation in front
+    let itemId = (square.testIds[index])? `${square.testIds[index]}` : `#new${uuid()}`;  // Sandbox: 
+    // let itemId = shop.ids[index];    
+
     // Create new object
     let myObject: CatalogObject = {
         type: "ITEM",
-        id: `${square.testIds[index]}`,  //square.cdIds[index]
+        id: `${itemId}`,  //shop.ids[index]
         present_at_all_locations: true,
-        // Idk why this is the version number...buggy
-        version: shop.version, 
-        // version: [shop.version];
+        version: shop.version, // Gets version number by making retrieve request...buggy
         // present_at_location_ids: [shop.locationId],
 
         // item_data: data
@@ -90,26 +104,17 @@ const createSquareItem = (tap: any, index: number, shop: any) => {
         // Add pricing variations
         // Uses tap information return and attach variation objects
         variations: prices.map((priceVariation) =>  // create array of variations
-            createVariation(shop, myObject.id, priceVariation.name, priceVariation.value)),
+            createVariation(shop, myObject.id, priceVariation.name, priceVariation.value/1)),
     }
-    
-    
-    // data.variations = prices.map((priceVariation) => {
-    //     return createVariation(shop, myObject.id, priceVariation.name, priceVariation.value);
-    // });
+
     // Append item data to object
     myObject.item_data = data;
-    
-    
-    
-
-    // data.name = "test";
-    // Attach each object to the
     return myObject;
 }
 
 // Returns array of Price objects
 const myPrices = (growler: any, serving: string, price: number) => {
+    if (!serving) {console.log(growler, serving, price)}
     // Initiate array to hold objects
     let prices = [];
     // prices.push({name: serving, value: price}); // Simpler?
@@ -136,21 +141,24 @@ class Price {
 
 
 
-
-const createVariation = (shop: any, itemId: string, variationName: string, variationPrice: number) => {
+/**
+ * Creates and returns variation objects based on relavant parameters
+ * @returns { CatalogObject } CatalogObject with type: ITEM_VARIATION and data stored in a CatalogItemVariation object
+ * @default variationPrice Defaults to 0 if not provided (when no price given)
+ */
+const createVariation = (shop: any, itemId: string, variationName: string, variationPrice: number = 0) => {
+    // Use variation price unless not provided
+    let price = (variationPrice)? variationPrice : 0;
     // Creates item variaton to be appended to catalog object
     let variationData: CatalogItemVariation = {
         item_id: itemId,                                       // Associates variation with related Item
         name: variationName,                                   // Sets name of variation
         pricing_type: "FIXED_PRICING",
         price_money: {
-            amount: Math.ceil(variationPrice * 100 / 1.101),   // Square operates in integers, acounts for tax at end
+            amount: Math.ceil(price * 100 / 1.101),   // Square operates in integers, acounts for tax at end
             currency: "USD"
         }
     }
-    
-    
-    
     // Create square object and set type to Item Variation
     // Also attach variation data to object
     let myVariationObject: CatalogObject = {
@@ -161,93 +169,9 @@ const createVariation = (shop: any, itemId: string, variationName: string, varia
         
         item_variation_data: variationData
     }
-    
     return myVariationObject;
 }
 
 
 
-// creates object with price information
-// @ts-ignore
-// depricated 
-class Prices {
-    // Determines display order?
-    ["20 oz"]?: number
-    ["16 oz"]?: number
-    ["12 oz"]?: number
-    Growler?: number
-    Half?: number
-    Crowler?: number
-    Quarter?: number
-    constructor(growler: number, serving: string, price: number) {
-        // this.Growler = (growler === 0)? growler : -1;
-        if (typeof(growler) === 'number') {
-            this.Growler = growler;
-            // this.Crowler = Math.ceil()
-        }
-        // this["16 oz"] = "hello"
-    }
-}
-
-// @ts-ignore
-// Depricated
-// Returns an array of variation items
-const getVariations = (tap: any, shop: any, itemId: string) => {
-    // Create array and add first variation object using the "Default Serving Size"
-    // let myVariations: CatalogObject[] = [createVariation(shop, itemId, tap.serving, tap.price)]; 
-    
-    // Required to do this before?
-    // if (tap.growler === "N/A") {
-    //     myVariations.push(createVariation(shop, itemId, "Growler", 0));
-    //     myVariations.push(createVariation(shop, itemId, "Crowler", 0));
-    // } else {
-    //     myVariations.push(createVariation(shop, itemId, "Growler", tap.growler));
-    //     myVariations.push(createVariation(shop, itemId, "Crowler", tap.growler / 2));
-    // }
-
-    // Create array of Price objects { name: string, value: number }
-    let prices = myPrices(tap.growler, tap.serving, tap.price);
-
-    // Traverse over prices and create variations...
-    let myVariations: CatalogObject[] = prices.map((priceVariation) => {
-        return createVariation(shop, itemId, priceVariation.name, priceVariation.value);
-    })
-
-    // // If need to change names...
-    // switch (tap.serving) {
-    //     case "4 oz":
-    //         myVariations.push(createVariation(shop, itemId, "test", 55));
-    //         break;
-    //     case "12 oz":
-    //         // myVariations.push(myVariationObject);
-    //         break;
-    //         default:
-    //             break;
-    // }
-            
-    return myVariations; 
-}
-
-
-
-
 export default updateSquare;
-// export { updateSquare }
-
-
-
-
-
-
-
-
-// // Firebase: 
-// // const config = {
-// //     apiKey: "",
-// //     authDomain: "",
-// //     databaseUrl: ""
-// // }
-// // firebase.intializeApp(config);
-// // var rootRef = firebase.database().ref();
-
-// console.log("iloadedme");

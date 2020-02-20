@@ -10,9 +10,12 @@ import updateSquare from './square';
 import { GW, CD } from './variables';
 
 
-// Manages *./app/data endpoint requests
-// Uses query info from request to determine which data to return
-// extract query data to only apply to Controller.ts?
+
+/**
+ * Manages data requests: *./app/data
+ * Uses query info from request to determine which data to return
+ * @todo extract query data to only apply to Controller.ts
+ */
 app.get('/data', (request: express.Request, response: express.Response) => {
     response.set('Cache-Control', 'no-cache, no-store');//'public, max-age=5, s-maxage=5');
     let query = request.query;
@@ -39,39 +42,52 @@ app.get('/data', (request: express.Request, response: express.Response) => {
 app.get('/update', (request: express.Request, response: express.Response) => {
     let query = request.query; 
     // let myShop = query.menu.startsWith('GW') ? GW : CD;
-    query.menu = "GW1";
+    //@ts-ignore
+    query.menu = GW | CD;
     // let itemArrays = [ GW.ids, CD.ids];
     // let queryArray = ["GW1", "CD1"];
 
     // Get data for each menu and add to database, then update square with this information
     // @params include the query for the data set and the shop it applies to
+    // @todo simplify to one call that gets all data for a shop
     const dataPromise = (dataSet: string, shop: object) => {
         getData(dataSet).then((cards) => {
             updateSquare(cards, shop).then((resp) => response.send(resp)).catch(err => console.error(err));
         }).catch(err => console.log(err));
+        dataPromise.length;
     }
 
-    dataPromise("GW", GW);
-    // data
-    dataPromise("CD", CD);
-
-    // Get data and update square with all pairs of data [3]
-    // getData(query.menu)
-    //     .then((cards) => {
-    //         updateSquare(cards, shop).then((resp) => response.send(resp)).catch(err => console.error(err));
-    //         // response.send(cards);
-    //     }).catch(err => console.log(err));
-    // getData(query.menu)
-    //     .then((cards) => {
-    //         updateSquare(cards, shop).then((resp) => response.send(resp)).catch(err => console.error(err));
-    //         // response.send(cards);
-    //     }).catch(err => console.log(err));
+    dataPromise("CD3", CD);
+    // Run them
+    // // Needs helper function
+    // let fullArray: any[] = [];
+    // const allData = Promise.all([getData("CD").then(helper), getData("CD3").then(helper)]).then(res => fullArray.concat(...res)).catch(console.error);
+    // // @ts-ignore
+    // allData.then((allCards: object[]) => {
+    //     console.log(allCards);
+        
+    //     updateSquare(allCards, CD).then(res => response.send(res)).catch(console.error);
+    // }).catch(console.error);
+    
+    
+    // dataPromise("CD", CD);
+    // getData("CD3").then((cards) => {
+        //     updateSquare(cards, CD).then((resp) => response.send(resp)).catch(err => console.error(err));
+        // }).catch(err => console.log(err));
+    
 });
 
 
+// // Currently need a helper function to add the Square ITEM's variation property to the objects
+// const helper = (dataResponse) => {
+
+//     return dataResponse;
+// }
 
 
-// External function to call with each query set and shop combo
+
+
+
 
 
 

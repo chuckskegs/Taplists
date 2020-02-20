@@ -78,9 +78,6 @@ async function getData (menu: string, myList?: string) {
   */
 const Beer = function (this: any, card: any, customDef: any, index: number) {
     // (index!)? this.tap = (index + 1): undefined;
-    if (card.name.charAt(0) === "_" || card.name.charAt(0) === "-") {
-        return;
-    }
     // Checks if index exists (first expression) and then considers the second statement
     !isNaN(index) && (this.tap = (index + 1));
     
@@ -102,23 +99,18 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
             // Sets property and value for those fields which DON'T use drop-down menu [text, number, checkbox, etc]
             this[fieldName] = customInfo.value[Object.keys(customInfo.value)[0]];     // checked = 5d38ec25bc83063847ea4910
         } else if (fieldName === "Color") { // "Color" is Trello field for beer type
-            // @ts-ignore
             this.type = customDef[customInfo.idCustomField][customInfo.idValue].value;       
-            // @ts-ignore
             // assign color to beer to determine display colors
             this.color = customDef[customInfo.idCustomField][customInfo.idValue].color;
-            
-            // @ts-ignore
             // this.color = customDef[customInfo.idCustomField][customInfo.idValue].value;
         } else {
-            // @ts-ignore
             // Sets property and value for those fields which DO use drop-down menu [list]
             this[fieldName] = customDef[customInfo.idCustomField][customInfo.idValue].value; 
         }
         return customInfo;
     });
 
-    
+    if (!card.name) {console.log(card)}
     // Overrides and Defaults:
     this.beer = card.name;
     // Default to 16oz serving size
@@ -128,6 +120,9 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
     // this.price = this["Keg$"];
     // Calculates price based on keg size, keg cost, and serving size
     this.price = calculatePrice(this);
+
+        // if (!this.Size) {console.log(this.price);}
+
     // price * 2; //temp
     // this.growler = `N/A`;
     // Set growler price based on normal price, serving size, size of keg, and cost
@@ -157,10 +152,12 @@ const Beer = function (this: any, card: any, customDef: any, index: number) {
 
 /**
  * Uses Beer object properties to determine price calculation
- * @param { Object } Beer 
+ * @param { Object } Beer Object with beer data
+ * @property { Object } Size required on Beer object
  * @returns { number } Price
  */
 const calculatePrice = (beer: any) => {
+    // if (!beer.Size) {return}
     // Determine Oz's in keg based on keg size
     switch (beer["Size"]) { 
         case `1/6, 20L, 5.16G`:
@@ -176,7 +173,7 @@ const calculatePrice = (beer: any) => {
             beer.oz = 1984;
             break;
         default:
-            console.log("Unknown Size ", beer.Size);
+            console.log("Unknown Size ", beer.beer);
             break;
     }
     // Set cost based on keg price and ounces received
@@ -201,6 +198,9 @@ const calculatePrice = (beer: any) => {
 
     // If alcoholic, don't let it be less than the minimum price allowed [$5.00]
     beer.price = (beer.abv) ? beer.price : Math.max(beer.price, minPrice);
+
+    // if (!beer.Size && !beer[`$Override`]) {console.log("no override: ", beer.beer);}
+
 
     // If override value exists (from Trello) return that value istead of normal price calculation
     return (!beer[`$Override`]) ? beer.price : beer[`$Override`];

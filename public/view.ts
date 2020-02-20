@@ -57,7 +57,11 @@ const generateTable = (data: object[]) => {
     data.map(obj => {
         let row = document.createElement("tr");
         tBody.appendChild(row);
-        
+        // @ts-ignore
+        // Skip rendering of beers with Placeholder marks
+        if (obj.beer.startsWith("-") || obj.beer.startsWith("_")) {
+            return console.log("Not Displayed: ", obj); 
+        }
         // Uses menuHeader to determine which fields to include
         Object.keys(menuHeader).map(key => {
             // "as any" removes type error?
