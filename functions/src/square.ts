@@ -1,5 +1,5 @@
 import { CatalogApi, ApiClient, CatalogObject, CatalogObjectBatch, BatchUpsertCatalogObjectsRequest, CatalogItem, BatchRetrieveCatalogObjectsRequest, CatalogItemVariation } from 'square-connect';
-import { square, posColor } from './variables';
+import { square, posColor, Shop } from './variables';
 import uuid from "uuid";
 
 const defaultClient = ApiClient.instance;
@@ -12,23 +12,23 @@ defaultClient.basePath = 'https://connect.squareupsandbox.com';     // here
 oauth2.accessToken = square.sandboxToken;                           // here
 
 
-
 // Initialize api to be used
 const api = new CatalogApi();
+
 /**
  * Accepts array of objects 
  * @returns {CatalogObject} Catalog object as a catalog item
  * @param {object[]} taplist An array of beer objects with relevant information from Trello
  * @param {any} shop The object with shop information to access
  */
-const updateSquare = async (taplist: any[], shop: any) => {
+const updateSquare = async (taplist: any[], shop: Shop) => {
     // return taplist;
     // Retrieve batch of catalog objects to get Version number for overwriting
     let body = new BatchRetrieveCatalogObjectsRequest();
     body.object_ids = square.testIds;                                     // Sandbox: Ids to use in search for version number
     // body.object_ids = shop.ids;
     let retrievedObjects = await api.batchRetrieveCatalogObjects(body);
-    console.log(retrievedObjects);
+    // console.log(retrievedObjects);
     
     // Assign version number to property
     taplist.map((tap, index) => {
@@ -62,12 +62,15 @@ const updateSquare = async (taplist: any[], shop: any) => {
 
     // Attempt to upsert batch and log the ids of objects created
     let upsertResponse = await api.batchUpsertCatalogObjects(batchRequest).then((resp) => {
-        let ids = resp.id_mappings?.map((elem) => elem.object_id);
-        console.log("Api call successfull..");
-        console.log("First 10 IDs: ", ids?.slice(0,10));
+        // For debugging/logging
+        let ids = resp.objects?.map((elem) => elem.id);
+        console.log(`Api call successfull for ${resp.objects?.length} objects`);
+        console.log(`First 10 IDs (${shop.name}): `, ids?.slice(0,10));
         return ids;
+        // return resp;
     }).catch((err) => [err.response.error.text, err]); 
-     
+        
+    
     return upsertResponse;   
 }
 
@@ -122,14 +125,8 @@ const createSquareItem = (tap: any, index: number, shop: any) => {
     // Name: To be listed as variation title
     // Value: Price for that variation ($0 | free if unavailable)
     let prices = myPrices(tap.growler, tap.serving, tap.price);
-    if (!tap.serving) {console.log(tap)}
+    if (!tap.serving) {console.log("No Serving: ", tap.beer)}
     
-    // If item doesn't exist, create new one with the "#" notation in front
-    // let ids = square.testIds;                                               // Sandbox:
-    // let itemId = (ids[index])? `${ids[index]}` : `#new${uuid()}`;   
-
-console.log("hello:" ,tap.version);
-
 
     // Create new object
     let myObject: CatalogObject = {
@@ -165,7 +162,7 @@ console.log("hello:" ,tap.version);
 
 // Returns array of Price objects
 const myPrices = (growler: any, serving: string, price: number) => {
-    if (!serving) {console.log(growler, serving, price)}
+    if (!serving) {console.log(`Missing Data: growler: ${growler} serving: ${serving} price: ${price}`)}
     // Initiate array to hold objects
     let prices = [];
     // prices.push({name: serving, value: price}); // Simpler?

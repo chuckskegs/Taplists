@@ -176,7 +176,6 @@ const calculatePrice = (beer: any) => {
             beer.oz = 1984;
             break;
         default:
-            console.log("Unknown Size ", beer.beer);
             break;
     }
     // Set cost based on keg price and ounces received
@@ -206,7 +205,7 @@ const calculatePrice = (beer: any) => {
 
 
     // If override value exists (from Trello) return that value istead of normal price calculation
-    return (!beer[`$Override`]) ? beer.price : beer[`$Override`];
+    return (!beer[`$Override`]) ? beer.price : beer[`$Override`] | 0;
     // return beer[`$Override`] || beer.price;  
 };
 

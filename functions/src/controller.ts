@@ -39,38 +39,46 @@ app.get('/data', (request: express.Request, response: express.Response) => {
  * @todo link to database
  */
 app.get('/update', (request: express.Request, response: express.Response) => {
-    let query = request.query; 
-    // let myShop = query.menu.startsWith('GW') ? GW : CD;
-    //@ts-ignore
-    query.menu = GW | CD;
+    // let query = request.query; 
+    // // let myShop = query.menu.startsWith('GW') ? GW : CD;
+    // //@ts-ignore
+    // query.menu = GW | CD;
     // let itemArrays = [ GW.ids, CD.ids];
     // let queryArray = ["GW1", "CD1"];
 
     // Get data for each menu and add to database, then update square with this information
     // @params include the query for the data set and the shop it applies to
     // @todo simplify to one call that gets all data for a shop
-    const dataPromise = (dataSet: string, shop: object) => {
-        getData(dataSet).then((cards) => {
-            updateSquare(cards, shop).then((resp) => response.send(resp)).catch(err => console.error(err));
-        }).catch(err => console.log(err));
-        dataPromise.length;
+    // const dataPromise = (dataSet: string, shop: Shop) => {
+    //     getData(dataSet).then((cards) => {
+    //         updateSquare(cards, shop).then((resp) => response.send(resp)).catch(err => console.error(err));
+    //     }).catch(err => console.log(err));
+    //     dataPromise.length;
+    // }
+
+
+    // Primary Update
+    // Uses queries strings to get data from Trello then update Square
+    // Current design supports actions for a single shop at a time 
+    const runUpdate = (queries: string[]) => {    
+        let shop = queries[0].startsWith('GW') ? GW : CD;
+        let fullArray: any[] = [];
+        const allData = Promise.all([getData(queries[0]), getData(queries[1])]).then(res => fullArray.concat(...res)).catch(console.error);
+        let ids = square.testIds;
+        // uses data that has been merged into one array with each card storing it's own version number
+        allData.then((res: any) => helper(res, ids)).then((allCards: object[]) => {
+            updateSquare(allCards, shop).then(res => res).catch(console.error);
+        }).catch((err) => {console.error(err); response.send(`${err}`)});
     }
-
-    // dataPromise("CD3", CD);
-
-    // Run them
-    // Needs helper function
-    let fullArray: any[] = [];
-    const allData = Promise.all([getData("CD"), getData("CD3")]).then(res => fullArray.concat(...res)).catch(console.error);
-    // @ts-ignore
-    let ids = square.testIds;
-    // uses data that has been merged into one array with each card storing it's own version number
-    allData.then((res: any) => helper(res, ids)).then((allCards: object[]) => {
-        // console.log(allCards);
-        // response.send(allCards)
-        updateSquare(allCards, CD).then(res => response.send(res)).catch(console.error);
-    }).catch((err) => {console.error(err); response.send(`${err}`)});
+    runUpdate(["CD", "CD3"]);
     
+    
+    setTimeout(() => {
+        runUpdate(["GW", "GW3"]);
+    }, 1000);
+
+    console.log("Api Update Finished");
+    response.send("Api Update Finished");
     
     // dataPromise("CD", CD);
     // getData("CD3").then((cards) => {
