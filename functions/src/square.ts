@@ -24,8 +24,14 @@ const api = new CatalogApi();
 const updateSquare = async (taplist: any[], shop: Shop) => {
     // return taplist;
     // Retrieve batch of catalog objects to get Version number for overwriting
-    let body = new BatchRetrieveCatalogObjectsRequest();
-    body.object_ids = square.testIds;                                     // Sandbox: Ids to use in search for version number
+    // let body = new BatchRetrieveCatalogObjectsRequest();
+    // body.object_ids = square.testIds;                                     // Sandbox: Ids to use in search for version number
+    let body: BatchRetrieveCatalogObjectsRequest = {
+        object_ids: square.testIds                                          // Sandbox: Ids to use in search for version number
+    }
+    // console.log(square.testIds);
+    
+    
     // body.object_ids = shop.ids;
     let retrievedObjects = await api.batchRetrieveCatalogObjects(body);
     // console.log(retrievedObjects);
@@ -33,14 +39,16 @@ const updateSquare = async (taplist: any[], shop: Shop) => {
     // Assign version number to property
     taplist.map((tap, index) => {
         try {
-            // @ts-ignore
             tap.version = retrievedObjects.objects![index].version;
             tap.itemId = retrievedObjects.objects![index].id;
+            
+            console.log(tap.itemId, retrievedObjects.objects![index].item_data?.name);
         } catch (error) {
-            // @ts-ignore
-            console.log(`Version Error: ${tap.beer}`, retrievedObjects.objects);
+            console.log(`Version Error: ${tap.beer}`);
         }
     });
+    
+    // console.log(retrievedObjects.objects);
     
     
     

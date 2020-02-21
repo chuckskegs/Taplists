@@ -75,7 +75,7 @@ app.get('/update', (request: express.Request, response: express.Response) => {
     
     setTimeout(() => {
         runUpdate(["GW", "GW3"]);
-    }, 1000);
+    }, 10000);
 
     console.log("Api Update Finished");
     response.send("Api Update Finished");
