@@ -1,6 +1,6 @@
 "use strict";
 // Uses data provided to display an HTML table
-var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
 // Can be used for header of table:
 // Key coordinates with keys in Beer objects, values are for the display to render
 // create this based on results of board custom fields? screw up the order?
@@ -94,5 +94,6 @@ document.addEventListener('DOMContentLoaded', initiateTable);
 (_e = document.getElementById('CD')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', loadDisplay);
 (_f = document.getElementById('GW1')) === null || _f === void 0 ? void 0 : _f.addEventListener('click', loadDisplay);
 (_g = document.getElementById('GW2')) === null || _g === void 0 ? void 0 : _g.addEventListener('click', loadDisplay);
-(_h = document.getElementById('GW')) === null || _h === void 0 ? void 0 : _h.addEventListener('click', loadDisplay);
-(_j = document.getElementById('Refresh')) === null || _j === void 0 ? void 0 : _j.addEventListener('click', function () { return alert("Refreshing..."); }); //lol
+(_h = document.getElementById('GW3')) === null || _h === void 0 ? void 0 : _h.addEventListener('click', loadDisplay);
+(_j = document.getElementById('GW')) === null || _j === void 0 ? void 0 : _j.addEventListener('click', loadDisplay);
+(_k = document.getElementById('Refresh')) === null || _k === void 0 ? void 0 : _k.addEventListener('click', function () { return alert("Refreshing..."); }); //lol

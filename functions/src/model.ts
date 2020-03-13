@@ -26,7 +26,8 @@ async function getData (menu: string, myList?: string) {
     let screen: number = parseInt(menu.charAt(2));
     let start;
     let end;
-
+    console.log(`Me: ${screen} ${list}`);
+    
     // Reduce Deck size based on screen to be displayed
     // Hopefully could be replaced with a CSS option
     switch (screen) {
@@ -58,7 +59,7 @@ async function getData (menu: string, myList?: string) {
     
     // Creates an array of Beer objects 
     // Looks at each card from Trello and creates Beer objects using the definitions made
-    let cards = jsonDeck.map((card: any, index: number) => new (Beer as any)(card, customDef, index));
+    let cards = jsonDeck.map((card: any, index: number) => new (Beer as any)(card, customDef, shop, index));
 
     // // Reduce Deck size based on screen to be displayed
     // // Could be replaced with a CSS option
@@ -75,12 +76,15 @@ async function getData (menu: string, myList?: string) {
   * @param {object} customDef The definitions object created
   * @param {number} index [Optional] The current index in array
   * @todo Refactor to class
-  */
-const Beer = function (this: any, card: any, customDef: any, shop: Shop, index: number) {
+  */ 
+ const Beer = function (this: any, card: any, customDef: any, shop: Shop, index: number) {
     // (index!)? this.tap = (index + 1): undefined;
     // Checks if index exists (first expression) and then considers the second statement
     !isNaN(index) && (this.tap = (index + 1));
-    
+     
+    if (!card.name) {console.log("no name :", card)}
+    this.beer = card.name;
+
     // Set shop name to beer object for reference
     this.shop = shop.name;
 
@@ -113,9 +117,7 @@ const Beer = function (this: any, card: any, customDef: any, shop: Shop, index: 
         return customInfo;
     });
 
-    if (!card.name) {console.log(card)}
     // Overrides and Defaults:
-    this.beer = card.name;
     // Default to 16oz serving size
     if (!this.serving) {
         this.serving = "16 oz";

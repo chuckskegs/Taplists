@@ -111,5 +111,6 @@ document.getElementById('CD4')?.addEventListener('click', loadDisplay);
 document.getElementById('CD')?.addEventListener('click', loadDisplay);
 document.getElementById('GW1')?.addEventListener('click', loadDisplay);
 document.getElementById('GW2')?.addEventListener('click', loadDisplay);
+document.getElementById('GW3')?.addEventListener('click', loadDisplay);
 document.getElementById('GW')?.addEventListener('click', loadDisplay);
 document.getElementById('Refresh')?.addEventListener('click', ()=>alert("Refreshing..."));//lol
