@@ -101,7 +101,7 @@ app.all('/update', (request: express.Request, response: express.Response) => {
     
     let combinedResponse = ["Empty Array for Empty Update"];
     
-    // // Store responses to render?
+    // Store responses to render?
     // combinedResponse.push(runUpdate(["CD", "CD3"]));
     // combinedResponse.push(runUpdate(["GW", "GW3"]));
     // combinedResponse.push(webResponse);
