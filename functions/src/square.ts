@@ -12,7 +12,7 @@ admin.initializeApp({
     credential: admin.credential.cert({
       projectId: "taplists",
       clientEmail: serviceAccount.client_email,//"firebase-adminsdk-emgbw@taplists.iam.gserviceaccount.com",
-      privateKey: serviceAccount.private_key,
+      privateKey: serviceAccount.private_key, 
     }),
    databaseURL: "https://taplists.firebaseio.com"
   });
