@@ -4,6 +4,7 @@ import { Shop, CD, GW, key, token, growlerCalc, minPrice, roundValue, plusValue,
 import http, { AxiosResponse, AxiosError } from 'axios';  // - need to use response.data to access the information
 
 
+
 /**
  * asynchronized!
  * Returns current taplist data based on query parameter provided

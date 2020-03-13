@@ -4,6 +4,7 @@ import * as functions from 'firebase-functions';
 import express from 'express';
 const app = express();
 
+
 // My imports
 import { getData } from "./model";
 import { updateSquare, helper, squareTest } from './square';

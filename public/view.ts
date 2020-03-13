@@ -14,6 +14,7 @@ const menuHeader = {
     abv: "%ABV",
 }
 
+
 // Might slow process down to retrieve from firebase functions
 // const header = async () => await $.get("/headers");
 

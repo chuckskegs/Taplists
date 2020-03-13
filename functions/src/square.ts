@@ -3,11 +3,17 @@ import { square, posColor, Shop } from './variables';
 import uuid from "uuid";
 // for database access?
 import * as admin from 'firebase-admin';
-// let serviceAccount = require('googleKey');
+
+// let serviceAccount = require('./googleKey.json');
+// let parsed = JSON.parse(serviceAccount);
+import * as serviceAccount from './googleKey.json';
+
 admin.initializeApp({
     credential: admin.credential.cert({
       projectId: "taplists",
-      }),
+      clientEmail: serviceAccount.client_email,//"firebase-adminsdk-emgbw@taplists.iam.gserviceaccount.com",
+      privateKey: serviceAccount.private_key,
+    }),
    databaseURL: "https://taplists.firebaseio.com"
   });
 // let credentials = {
@@ -51,6 +57,8 @@ const updateSquare = async (taplist: any[], shop: Shop) => {
     // Retrieve batch of catalog objects to get Version number for overwriting
     // let body = new BatchRetrieveCatalogObjectsRequest();
     // body.object_ids = square.testIds;                                     
+
+    // console.log(serviceAccount, parsed);
     
     // Get database reference and set value to be checked before upsert
     let db = admin.database();
