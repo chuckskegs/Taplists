@@ -30,7 +30,15 @@ var loadDisplay = function (req) {
     // Query parameters to be sent to server-side code
     // Determines data to retrieve by the id of the button pressed
     var query = { menu: req.target.id };
-    // extend to use more query information?
+    // if (req) {
+    //     try {
+    //         //@ts-ignore
+    //         query = { menu: req.target.id };
+    //     } catch (error) {
+    //         console.log("error with my query")
+    //     }
+    // }
+    // // extend to use more query information?
     // Http request to express app in Controller.ts
     // Request is for file in same directory root ending in '/data' with the query following a '?'
     $.get("/data", query).then(generateTable);

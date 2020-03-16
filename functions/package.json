@@ -20,7 +20,7 @@
     "jquery": "^3.4.1",
     "axios": "0.19.2",
     "square-connect": "2.20200122.0",
-    "uuid": "6.0.2"
+    "uuid": "7.0.2"
   },
   "devDependencies": {
     "@types/firebase": "3.2.1",
