@@ -405,6 +405,7 @@ const CD: Shop = {
 
 
 // Controls the color to show on the Square POS system 
+// Do not change, POS only allows a few colors
 const posColor = {
     "Pale, IPA" : "4ab200",     // light green
     "Cider" : "e5BF00",         // yellow
@@ -442,7 +443,7 @@ const square = {
  * 
  */
 //@ts-ignore
-const setup = () => { 
+const setEnvironment = () => { 
     square.accessToken = "EAAAEAc8bQK1bCNQkoHHHqSlwIAiy2gEB-g8EtRqX0EVkYOlITOo_2yeZLsdEgS1";
     square.clientId = "sq0idp-GNJz38YO42bc95-iOPHyLQ";
     CD.categoryId = "SN2VHQBZJGUYI5VKAJPGQUGA";
@@ -607,4 +608,4 @@ const setup = () => {
 
 
 
-export { Shop, CD, GW, key, token, growlerCalc, minPrice, roundValue, plusValue, markUp, menuHeader, square, posColor, setup };
+export { Shop, CD, GW, key, token, growlerCalc, minPrice, roundValue, plusValue, markUp, menuHeader, square, posColor, setEnvironment };

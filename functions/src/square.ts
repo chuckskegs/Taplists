@@ -1,5 +1,5 @@
 import { CatalogApi, ApiClient, CatalogObject, CatalogObjectBatch, BatchUpsertCatalogObjectsRequest, CatalogItem, BatchRetrieveCatalogObjectsRequest, CatalogItemVariation, BatchDeleteCatalogObjectsRequest } from 'square-connect';
-import { square, posColor, Shop, setup } from './variables';
+import { square, posColor, Shop, setEnvironment } from './variables';
 import { v4 as uuid } from "uuid";
 
 import * as serviceAccount from './googleKey.json';
@@ -33,7 +33,7 @@ admin.initializeApp({
 // admin.initializeApp();
 }
 
-setup();
+setEnvironment();
 // Configure OAuth2 access token for authorization: oauth2
 const defaultClient = ApiClient.instance;
 // shorter:  ApiClient.instance.authetications.oath2.accessToken = square.accessToken;
@@ -267,7 +267,7 @@ const createSquareItem = (tap: any, index: number, shop: Shop ) => {
     
     // Set data of new item
     let data: CatalogItem = {
-        name: `${shop.name} - Tap ${index+1}: ${tap.beer}`,
+        name: `${tap.beer}`,
         abbreviation: `${index+1}`,//${tap.tap}`,
         category_id: shop.categoryId,
         label_color: (posColor as any)[tap.type],

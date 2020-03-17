@@ -1,6 +1,8 @@
 "use strict";
-// Uses data provided to display an HTML table
 var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+// Uses data provided to display an HTML table
+var menu = "CD1";
+var running = false;
 // Can be used for header of table:
 // Key coordinates with keys in Beer objects, values are for the display to render
 // create this based on results of board custom fields? screw up the order?
@@ -19,17 +21,31 @@ var menuHeader = {
 // Costructs page on first load..?
 var initiateTable = function () {
     // Use event object to determine which location to display first
+    // Temp for testing...
+    loadDisplay();
 };
 // "GW Events" onClick
 var loadGW = function () { $.get("/gw1").then(generateTable); };
 // "CD Events" onClick
 var loadCD = function () { $.get("/cd1").then(generateTable); };
+// Recieves onClick requests, sets states, and runs regular interval updates
+var setMenu = function (req) {
+    //@ts-ignore
+    menu = req.target.id;
+    // changeStyles(menu);
+    loadDisplay();
+    if (!running) {
+        running = true;
+        window.setInterval(loadDisplay, 30000);
+    }
+};
 // Primary Response to Load The App Display
-var loadDisplay = function (req) {
+var loadDisplay = function () {
     // @ts-ignore: no id on type EventTarget
     // Query parameters to be sent to server-side code
     // Determines data to retrieve by the id of the button pressed
-    var query = { menu: req.target.id };
+    var query = { menu: menu };
+    // let query = "CD";
     // if (req) {
     //     try {
     //         //@ts-ignore
@@ -38,7 +54,7 @@ var loadDisplay = function (req) {
     //         console.log("error with my query")
     //     }
     // }
-    // // extend to use more query information?
+    // extend to use more query information?
     // Http request to express app in Controller.ts
     // Request is for file in same directory root ending in '/data' with the query following a '?'
     $.get("/data", query).then(generateTable);
@@ -47,6 +63,9 @@ var loadDisplay = function (req) {
 };
 // Rewrites table data
 var generateTable = function (data) {
+    if (typeof (data) === "string") {
+        alert(data);
+    }
     // Use sample data if none povided
     var tBody = document.getElementById("table-body"); // Expects not null "!"
     tBody.innerHTML = "";
@@ -75,6 +94,7 @@ var generateTable = function (data) {
                 cell.className += " differentSize";
             }
             // @ts-ignore
+            // Sets color based on POS color
             cell.style.color = obj.color;
             //////////////////////////// class name vvv     
             // console.log(cell.className);
@@ -95,13 +115,13 @@ var generateTable = function (data) {
 // based on "id" or other information from the element?
 // -- actually should request that data from the Controller?
 document.addEventListener('DOMContentLoaded', initiateTable);
-(_a = document.getElementById('CD1')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', loadDisplay);
-(_b = document.getElementById('CD2')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', loadDisplay);
-(_c = document.getElementById('CD3')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', loadDisplay);
-(_d = document.getElementById('CD4')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', loadDisplay);
-(_e = document.getElementById('CD')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', loadDisplay);
-(_f = document.getElementById('GW1')) === null || _f === void 0 ? void 0 : _f.addEventListener('click', loadDisplay);
-(_g = document.getElementById('GW2')) === null || _g === void 0 ? void 0 : _g.addEventListener('click', loadDisplay);
-(_h = document.getElementById('GW3')) === null || _h === void 0 ? void 0 : _h.addEventListener('click', loadDisplay);
-(_j = document.getElementById('GW')) === null || _j === void 0 ? void 0 : _j.addEventListener('click', loadDisplay);
+(_a = document.getElementById('CD1')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', setMenu);
+(_b = document.getElementById('CD2')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', setMenu);
+(_c = document.getElementById('CD3')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', setMenu);
+(_d = document.getElementById('CD4')) === null || _d === void 0 ? void 0 : _d.addEventListener('click', setMenu);
+(_e = document.getElementById('CD')) === null || _e === void 0 ? void 0 : _e.addEventListener('click', setMenu);
+(_f = document.getElementById('GW1')) === null || _f === void 0 ? void 0 : _f.addEventListener('click', setMenu);
+(_g = document.getElementById('GW2')) === null || _g === void 0 ? void 0 : _g.addEventListener('click', setMenu);
+(_h = document.getElementById('GW3')) === null || _h === void 0 ? void 0 : _h.addEventListener('click', setMenu);
+(_j = document.getElementById('GW')) === null || _j === void 0 ? void 0 : _j.addEventListener('click', setMenu);
 (_k = document.getElementById('Refresh')) === null || _k === void 0 ? void 0 : _k.addEventListener('click', function () { return alert("Refreshing..."); }); //lol

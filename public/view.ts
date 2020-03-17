@@ -1,5 +1,6 @@
 // Uses data provided to display an HTML table
-
+let menu = "CD1";
+let running = false;
 
 // Can be used for header of table:
 // Key coordinates with keys in Beer objects, values are for the display to render
@@ -23,19 +24,35 @@ const menuHeader = {
 const initiateTable = () => {
     // Use event object to determine which location to display first
 
+    // Temp for testing...
+    loadDisplay();    
 }
+
 // "GW Events" onClick
 const loadGW = () => { $.get("/gw1").then(generateTable); }
 // "CD Events" onClick
 const loadCD = () => { $.get("/cd1").then(generateTable); }
 
+// Recieves onClick requests, sets states, and runs regular interval updates
+const setMenu = (req: MouseEvent) => {
+    //@ts-ignore
+    menu = req.target.id;
+    // changeStyles(menu);
+    loadDisplay();
+    if (!running) {
+        running = true;
+        window.setInterval(loadDisplay, 30000);
+    }
+}
+
 
 // Primary Response to Load The App Display
-const loadDisplay = (req: MouseEvent) => { 
+const loadDisplay = () => { 
     // @ts-ignore: no id on type EventTarget
     // Query parameters to be sent to server-side code
     // Determines data to retrieve by the id of the button pressed
-    let query = { menu: req.target.id };
+    let query = { menu: menu };
+    // let query = "CD";
     // if (req) {
     //     try {
     //         //@ts-ignore
@@ -44,7 +61,7 @@ const loadDisplay = (req: MouseEvent) => {
     //         console.log("error with my query")
     //     }
     // }
-    // // extend to use more query information?
+    // extend to use more query information?
     
     // Http request to express app in Controller.ts
     // Request is for file in same directory root ending in '/data' with the query following a '?'
@@ -57,6 +74,10 @@ const loadDisplay = (req: MouseEvent) => {
 
 // Rewrites table data
 const generateTable = (data: object[]) => {
+    if (typeof(data) === "string") {
+        alert(data);
+    }
+    
     // Use sample data if none povided
     var tBody = document.getElementById("table-body")!; // Expects not null "!"
     tBody.innerHTML = "";
@@ -89,6 +110,7 @@ const generateTable = (data: object[]) => {
                 cell.className += " differentSize";
             }
             // @ts-ignore
+            // Sets color based on POS color
             cell.style.color = obj.color;
        //////////////////////////// class name vvv     
             // console.log(cell.className);
@@ -113,13 +135,13 @@ const generateTable = (data: object[]) => {
 // based on "id" or other information from the element?
 // -- actually should request that data from the Controller?
 document.addEventListener('DOMContentLoaded', initiateTable);
-document.getElementById('CD1')?.addEventListener('click', loadDisplay);
-document.getElementById('CD2')?.addEventListener('click', loadDisplay);
-document.getElementById('CD3')?.addEventListener('click', loadDisplay);
-document.getElementById('CD4')?.addEventListener('click', loadDisplay);
-document.getElementById('CD')?.addEventListener('click', loadDisplay);
-document.getElementById('GW1')?.addEventListener('click', loadDisplay);
-document.getElementById('GW2')?.addEventListener('click', loadDisplay);
-document.getElementById('GW3')?.addEventListener('click', loadDisplay);
-document.getElementById('GW')?.addEventListener('click', loadDisplay);
+document.getElementById('CD1')?.addEventListener('click', setMenu);
+document.getElementById('CD2')?.addEventListener('click', setMenu);
+document.getElementById('CD3')?.addEventListener('click', setMenu);
+document.getElementById('CD4')?.addEventListener('click', setMenu);
+document.getElementById('CD')?.addEventListener('click', setMenu);
+document.getElementById('GW1')?.addEventListener('click', setMenu);
+document.getElementById('GW2')?.addEventListener('click', setMenu);
+document.getElementById('GW3')?.addEventListener('click', setMenu);
+document.getElementById('GW')?.addEventListener('click', setMenu);
 document.getElementById('Refresh')?.addEventListener('click', ()=>alert("Refreshing..."));//lol

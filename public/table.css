@@ -1,59 +1,63 @@
-html {
-  background-color: #44a53b;
-  /* why does this need to be here?>*/
-}
-
+/* html { */
+  
+/* } */
+/* Color Behind whole table (shows before load)
+   White looks weird */
 body {
   background-color: #000000;
 }
+/* Removes Scrollbar */
 body::-webkit-scrollbar {
   display: none;
 }
 
+/* Base for table */
+/* Position helps make sure it takes full screen */
 table {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  border: 1px solid #1c6ea4;
-  background-color: #1f1f1f;
-  width: 100%;
-  text-align: left;
-  border-collapse: collapse;
-  font-family: Helvetica;
+  background-color: #1f1f1f; /* cell backgrounds */
+  width: 100%;                 /* full screen */
+  border-collapse: collapse;   /* no space between cells, single border */
+  font-family: Helvetica;      /* base font */
 }
+/* Border separation between cells */
 table td,
 table th {
-  border: 1px solid black;
+  border: 1px solid rgb(0, 0, 0);
 }
-
+/* Every other cell has black background */
 table tr:nth-child(even) {
   background: #000000;
 }
-
+/* Increased border separating header from body of table */
 table thead {
   border-bottom: 2px solid #444444;
 }
-
+/* Header formatting */
 table thead th {
-  font-size: 35px;
+  font-size: 30px;
+  height: 30;
   font-weight: bold;
-
   text-align: center;
   padding: 2px;
 }
+
 #headers {
   background-color: #1134a6;
   color: #ffffff;
 }
 
+/* Mouse Hover Effect */
 table tbody tr:hover {
   background-color: #ddd;
 }
 table tbody td {
   color: #ffffff;
   font-size: 41px;
-  height: 60px;
+  height: 52px;
   padding: 0px;
   padding-left: 15px;
   padding-right: 15px;
@@ -123,7 +127,7 @@ table tfoot .links button {
 }
 
 .tap::before {
-  content: "Tap ";
+  content: "Taps";
   font-size: small;
 }
 
