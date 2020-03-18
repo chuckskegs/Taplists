@@ -118,7 +118,7 @@ async function getData (menu: string, myList?: string) {
             // Sets property and value for those fields which DON'T use drop-down menu [text, number, checkbox, etc]
             this[fieldName] = customInfo.value[Object.keys(customInfo.value)[0]];     // checked = 5d38ec25bc83063847ea4910
         } else if (fieldName === "Color") { // "Color" is Trello field for beer type
-            this.type = customDef[customInfo.idCustomField][customInfo.idValue].value;       
+            this.type = customDef[customInfo.idCustomField][customInfo.idValue].value;// || "Standard";       
             // assign color to beer to determine display colors
             this.color = customDef[customInfo.idCustomField][customInfo.idValue].color;
             // this.color = customDef[customInfo.idCustomField][customInfo.idValue].value;
@@ -144,9 +144,9 @@ async function getData (menu: string, myList?: string) {
     // this.growler = `N/A`;
     // Set growler price based on normal price, serving size, size of keg, and cost
     if (this.NoGr) {
+        // needed for Square?
         this.growler = 0;
     } else {
-        // change to ceil when possible
         this.growler = Math.ceil(this.priceOz * growlerCalc.ozToGrowler);
     }
 
@@ -213,13 +213,11 @@ const calculatePrice = (beer: any) => {
     beer.price = Math.ceil(beer.price * roundValue)/roundValue;
 
     // If alcoholic, don't let it be less than the minimum price allowed [$5.00]
-    beer.price = (beer.abv) ? beer.price : Math.max(beer.price, minPrice);
-
-    // if (!beer.Size && !beer[`$Override`]) {console.log("no override: ", beer.beer);}
-
+    if (beer.abv && beer.abv >= 0) { beer.price = Math.max(beer.price, minPrice) };
+    // beer.price = (beer.abv) ? beer.price : Math.max(beer.price, minPrice);
 
     // If override value exists (from Trello) return that value istead of normal price calculation
-    return (!beer[`$Override`]) ? beer.price : beer[`$Override`] | 0;
+    return ((!beer[`$Override`]) ? beer.price | 0 : beer[`$Override`] | 0).toFixed(2); // rounds to two decimal places
     // return beer[`$Override`] || beer.price;  
 };
 

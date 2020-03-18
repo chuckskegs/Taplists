@@ -22,6 +22,7 @@ table {
   width: 100%;                 /* full screen */
   border-collapse: collapse;   /* no space between cells, single border */
   font-family: Helvetica;      /* base font */
+  text-align: center;          /* default to center */
 }
 /* Border separation between cells */
 table td,
@@ -32,37 +33,38 @@ table th {
 table tr:nth-child(even) {
   background: #000000;
 }
-/* Increased border separating header from body of table */
-table thead {
-  border-bottom: 2px solid #444444;
-}
-/* Header formatting */
-table thead th {
-  font-size: 30px;
-  height: 30;
-  font-weight: bold;
-  text-align: center;
-  padding: 2px;
-}
 
+/* Header Formatting */
+/* ID given for controlling header */
 #headers {
-  background-color: #1134a6;
+  border-bottom: 2px solid #444444; /* Increased border separating header from body of table */
+  background-color: #ffffff;
   color: #ffffff;
+  font-size: 25px;
+  height: 40px;
+  font-weight: bold;
+}
+table thead th {
+  padding-right: 5px;
+  padding-left: 5px;
 }
 
-/* Mouse Hover Effect */
-table tbody tr:hover {
-  background-color: #ddd;
-}
+/* ----- Body Base Formatting ----- */
 table tbody td {
   color: #ffffff;
-  font-size: 41px;
+  font-size: 20px;
   height: 52px;
   padding: 0px;
   padding-left: 15px;
   padding-right: 15px;
 }
+/* Mouse Hover Effect */
+table tbody tr:hover {
+  background-color: #ddd;
+}
 
+
+/* ---- Footer ----- */
 table tfoot {
   font-size: 14px;
   font-weight: bold;
@@ -85,63 +87,40 @@ table tfoot .links button {
   border-radius: 5px;
 }
 
-/* #beers {
-  text-align: center;
-} */
 
 
-
+/* ---- Class adjustments ----  */
+/* Columns */
+.beer, .tap {
+  text-align: left;
+  font-size: 35px;
+}
 
 /* Alignment */
-.tap, .serving, .price, .growler, .origin, .abv {
+.serving, .price, .growler, .origin, .abv {
+  /* text-align: center; */
+  /* IDK why needs to be upscaled */
+  font-size: 150%; 
+}
+.tap {
   text-align: center;
-  font-size: 200%;
 }
 
 
-/* Mobile View */
-@media (max-width: 999px) {
-  .beer {
-    color: fuchsia;
-    
-  }
-  thead, .tap, .growler, .origin {
-    display: none;
-  }
-  .beer, .serving, .price, .abv {
-    font-size: 14px;
-  }
-  .mobileButtons {
-    visibility: visible;
-  }
-  .displayButtons {
-    visibility: collapse;
-  }
-}
 
-/* Display/Desktop */
-@media (min-width: 1000px) {
-  .mobileButtons {
-    visibility: hidden;
-  }
+/* Adding Symbols */
+.growler::before { 
+  content: "$";
 }
-
 .tap::before {
-  content: "Taps";
   font-size: small;
 }
-
 .price::before {
   content: "$";
 }
-
 .abv::after {
   content: "%";
 }
-
-
-
-
 /* Stars for serving sizes other than 16oz */
 .serving.differentSize::before {
   content: "*";
@@ -151,12 +130,72 @@ table tfoot .links button {
 }
 
 
-/* Colors based on beer type 
-.Cider {
-  color: chartreuse;
+/* -----  View Adjustments -----  */
+/* could manage by screen orientation */
+/* Mobile View */
+@media (max-width: 999px) {
+  /* Remove columns */
+  thead, .tap, .growler, .origin {
+    display: none;
+  }
+  /* Decrease font size */
+  .beer, .serving, .price, .abv {
+    font-size: 14px;
+  }
+  /* Show buttons */
+  .mobileButtons {
+    visibility: visible;
+  }
+  /* Hide other buttons */
+  .displayButtons {
+    visibility: collapse;
+  }
 }
 
-[class*="IPA"] {
-  color: red;
+/* Display/Desktop */
+@media (min-width: 1000px) {
+  /* Hide buttons */
+  .mobileButtons {
+    visibility: hidden;
+  }
 }
-*/
+
+
+
+/* Colors based on beer type */
+/* Can add any other styles! */
+.Event {
+  color: white;
+  background-color: red;
+}
+.Cider {
+  color: rgb(247, 255, 0);
+}
+[class*="IPA"] {
+  color: rgb(43, 255, 28);
+}
+.Sour {
+  color: rgb(255, 0, 247);
+}
+[class*="Porter, Stout"] {
+  color: rgb(255, 170, 0);
+}
+.Wine {
+  color: rgb(255, 0, 0);
+}
+[class*="Non Beer"] {
+  color: rgb(38, 241, 255);
+}
+.Pilsner { /* default if no Type selected in Trello */
+  color: rgb(255, 255, 255);
+}
+
+
+/* Sets before/after contents of some empty cells */
+/* to remove unnecessary symbols: "$" and "%" */
+td:empty::before {
+  content: "N/A";
+}
+td:empty::after {
+  content: "";
+}

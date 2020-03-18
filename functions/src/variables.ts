@@ -65,6 +65,7 @@ interface Shop {
     list2: string
     listSame: string
     board: string
+    headerColor: string
     version: number
 }
 // Location Specific Information
@@ -231,6 +232,7 @@ const GW: Shop = {
     list2 : '5e4cbbd5530d1a7c55de65a1',      // GW Bottle List
     listSame : '5e1f9e54f5719012a69fba14',   // GW Same-Day Trello List
     board : '54ab339ee8e7ddb91a778d68',      // GW Trello Board
+    headerColor: '#11a618', //need to change within view.ts
     version : 123,                       // Version of Square item to be overwritten when being used
 }
 
@@ -400,6 +402,7 @@ const CD: Shop = {
     list2 : '5816346a1b9cf1166c582c8d',      // CD Soft Drinks List
     listSame : '5e28a6497050ff6c005f68cf',   // CD Same Day Kegs
     board : '54ab2dc27a5de0dd1a9cd67b',      // CD Trello Board
+    headerColor: '#1134a6',
     version : 123,                       // Version of Square item to be overwritten when being used
 }
 
@@ -416,8 +419,6 @@ const posColor = {
     "Event" : "e5457a",         // pink
     "undefined" : "9da2a6"      // gray
 }
-
-
 
 
 

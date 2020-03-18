@@ -1,7 +1,7 @@
 "use strict";
 var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
 // Uses data provided to display an HTML table
-var menu = "CD1";
+var menu;
 var running = false;
 // Can be used for header of table:
 // Key coordinates with keys in Beer objects, values are for the display to render
@@ -22,7 +22,8 @@ var menuHeader = {
 var initiateTable = function () {
     // Use event object to determine which location to display first
     // Temp for testing...
-    loadDisplay();
+    // menu = "GW1"
+    // loadDisplay();    
 };
 // "GW Events" onClick
 var loadGW = function () { $.get("/gw1").then(generateTable); };
@@ -32,12 +33,16 @@ var loadCD = function () { $.get("/cd1").then(generateTable); };
 var setMenu = function (req) {
     //@ts-ignore
     menu = req.target.id;
-    // changeStyles(menu);
+    changeStyles();
     loadDisplay();
     if (!running) {
         running = true;
         window.setInterval(loadDisplay, 30000);
     }
+};
+var changeStyles = function () {
+    var color = (menu.startsWith("CD")) ? '#1134a6' : '#11a618';
+    $("#headers").css({ "background-color": color });
 };
 // Primary Response to Load The App Display
 var loadDisplay = function () {
@@ -87,20 +92,20 @@ var generateTable = function (data) {
             var cell = document.createElement("td");
             // @ts-ignore // default object data does not have paraemeters? create class/interface?
             // Adds three classes to the cell, could inherit from the parent...
-            cell.className = key + " row" + row.rowIndex + " " + obj.type;
+            cell.className = key + " row" + row.rowIndex + " " + (obj.type || "Pilsner");
             // @ts-ignore
             // Add styling class to all cells in row based on a condition
             if (obj.serving != "16 oz") {
                 cell.className += " differentSize";
             }
-            // @ts-ignore
-            // Sets color based on POS color
-            cell.style.color = obj.color;
-            //////////////////////////// class name vvv     
-            // console.log(cell.className);
-            // Read "N/A" if growler price is 0
-            if (eventDetail === 0) {
-                eventDetail = "N/A";
+            // Set color based on POS color (better feature for new user because they can control color from Trello)
+            // cell.style.color = obj.color; --important?
+            // if (eventDetail == "NaN") {alert(`${obj.beer}`)}
+            // Changed: Empty cell if value of zero (string or integer)
+            // Helps with CSS styling
+            if (eventDetail === 0 || eventDetail === "0") {
+                eventDetail = ""; // empty so that CSS can make formatting changes
+                // eventDetail = "N/A";
             }
             cell.textContent = eventDetail;
             row.appendChild(cell);
