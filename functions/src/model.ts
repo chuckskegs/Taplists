@@ -174,7 +174,9 @@ async function getData (menu: string, myList?: string) {
  * @returns { number } Price
  */
 const calculatePrice = (beer: any) => {
+    if (beer[`$Override`]) { return beer[`$Override`] };
     // if (!beer.Size) {return}
+    let price = 0; // better to not change property of passed in object because goal is just to return price??
     // Determine Oz's in keg based on keg size
     switch (beer["Size"]) { 
         case `1/6, 20L, 5.16G`:
@@ -202,22 +204,29 @@ const calculatePrice = (beer: any) => {
     if (beer.Special === "Nitro") {
         //@ts-ignore
         // This overrides if any nitro serving sizes are other than 20oz. They had 8oz Nitro's for Fort George event (2/7/20)
-        beer.price = beer.priceOz * 16 + plusValue[beer.Special];   //<--- add a dollar to nitro
+        // beer.price = beer.priceOz * 16 + plusValue[beer.Special];   //<--- add a dollar to nitro
+        price = beer.priceOz * 16 + (plusValue as any)[beer.Special];
     } else {
         //@ts-ignore
         // Set price price based on serving size, price per oz, and additional base price (plusValue)
-        beer.price = beer.priceOz * parseInt(beer.serving) + plusValue[beer.oz];  
+        // beer.price = beer.priceOz * parseInt(beer.serving) + (plusValue as any)[beer.oz];  
+        price = beer.priceOz * parseInt(beer.serving) + (plusValue as any)[beer.oz];          
     }
+    console.log((plusValue as any)[beer.oz]);
 
-    // Round up [to nearest quarter ($0.25)] 
-    beer.price = Math.ceil(beer.price * roundValue)/roundValue;
+
 
     // If alcoholic, don't let it be less than the minimum price allowed [$5.00]
-    if (beer.abv && beer.abv >= 0) { beer.price = Math.max(beer.price, minPrice) };
-    // beer.price = (beer.abv) ? beer.price : Math.max(beer.price, minPrice);
+    // might need to change to account for serving size under 16oz...
+    if (beer.abv && beer.abv >= 0) { 
+        // beer.price = Math.max(beer.price, minPrice);
+        price = Math.max(price, minPrice);
+    };
 
+    // Round up [to nearest quarter ($0.25)] and hold to hundredths place
+    return (Math.ceil(price*roundValue)/roundValue).toFixed(2); // rounds to 100th place
     // If override value exists (from Trello) return that value istead of normal price calculation
-    return ((!beer[`$Override`]) ? beer.price | 0 : beer[`$Override`] | 0).toFixed(2); // rounds to two decimal places
+    return Math.round(roundValue*((!beer[`$Override`]) ? beer.price : beer[`$Override`] | 0)/roundValue); // rounds to 100th place
     // return beer[`$Override`] || beer.price;  
 };
 

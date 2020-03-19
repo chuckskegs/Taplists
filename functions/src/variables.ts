@@ -20,10 +20,10 @@ const menuHeader = {
 // Determines markup when calculating price based on cost: priceOz = costOz / markUp
 // priceOz = costOz / markUp
 const markUp = {
-    660: .3,
-    980: .3,
-    1690: .3,
-    1984: .3
+    "660": .3,
+    "980": .3,
+    "1690": .3,
+    "1984": .3
 }
 
 // Determines how much to add at the end (as a base amount): price = priceOz * servingOz + plusValue

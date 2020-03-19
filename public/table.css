@@ -100,7 +100,7 @@ table tfoot .links button {
 .serving, .price, .growler, .origin, .abv {
   /* text-align: center; */
   /* IDK why needs to be upscaled */
-  font-size: 150%; 
+  font-size: 200%; 
 }
 .tap {
   text-align: center;
@@ -149,6 +149,10 @@ table tfoot .links button {
   /* Hide other buttons */
   .displayButtons {
     visibility: collapse;
+  }
+  /* Padding */
+  table tbody td {
+    padding: 8px;
   }
 }
 
