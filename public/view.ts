@@ -54,7 +54,9 @@ const changeStyles = () => {
 
 // Primary Response to Load The App Display
 const loadDisplay = () => { 
-    // @ts-ignore: no id on type EventTarget
+
+    confirm("All draft beer sales are suspended until further notice in efforts to do our part to help control the spread of Covid-19. \n\nFresh beer can still be found in crowlers canned by the breweries themselves. Stop in Tues-Sat 12pm-8pm for current selection. \n\nStay Healthy!")
+    
     // Query parameters to be sent to server-side code
     // Determines data to retrieve by the id of the button pressed
     let query = { menu: menu };
@@ -153,4 +155,4 @@ document.getElementById('GW1')?.addEventListener('click', setMenu);
 document.getElementById('GW2')?.addEventListener('click', setMenu);
 document.getElementById('GW3')?.addEventListener('click', setMenu);
 document.getElementById('GW')?.addEventListener('click', setMenu);
-document.getElementById('Refresh')?.addEventListener('click', ()=>alert("Refreshing..."));//lol
+document.getElementById('Refresh')?.addEventListener('click', ()=> { alert("Refreshing...I do this every 30 seconds"); loadDisplay });//lol

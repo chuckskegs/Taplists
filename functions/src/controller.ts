@@ -132,7 +132,7 @@ app.get('/test', (request: express.Request, response: express.Response) => {
 // todo: give shops individual addresses?
 exports.app = functions.https.onRequest(app);
 
-// Scheduled to run update automatically once each minute
+// Scheduled to run update automatically once each minute (backup)
 exports.scheduledUpdate = functions.pubsub.schedule('* * * * *').onRun((context) => {
     console.log('This will be run every 1 minute!');
         

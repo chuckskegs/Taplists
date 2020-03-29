@@ -46,7 +46,7 @@ var changeStyles = function () {
 };
 // Primary Response to Load The App Display
 var loadDisplay = function () {
-    // @ts-ignore: no id on type EventTarget
+    confirm("All draft beer sales are suspended until further notice in efforts to do our part to help control the spread of Covid-19. \n\nFresh beer can still be found in crowlers canned by the breweries themselves. Stop in Tues-Sat 12pm-8pm for current selection. \n\nStay Healthy!");
     // Query parameters to be sent to server-side code
     // Determines data to retrieve by the id of the button pressed
     var query = { menu: menu };
@@ -129,4 +129,4 @@ document.addEventListener('DOMContentLoaded', initiateTable);
 (_g = document.getElementById('GW2')) === null || _g === void 0 ? void 0 : _g.addEventListener('click', setMenu);
 (_h = document.getElementById('GW3')) === null || _h === void 0 ? void 0 : _h.addEventListener('click', setMenu);
 (_j = document.getElementById('GW')) === null || _j === void 0 ? void 0 : _j.addEventListener('click', setMenu);
-(_k = document.getElementById('Refresh')) === null || _k === void 0 ? void 0 : _k.addEventListener('click', function () { return alert("Refreshing..."); }); //lol
+(_k = document.getElementById('Refresh')) === null || _k === void 0 ? void 0 : _k.addEventListener('click', function () { alert("Refreshing...I do this every 30 seconds"); loadDisplay; }); //lol

@@ -212,7 +212,6 @@ const calculatePrice = (beer: any) => {
         // beer.price = beer.priceOz * parseInt(beer.serving) + (plusValue as any)[beer.oz];  
         price = beer.priceOz * parseInt(beer.serving) + (plusValue as any)[beer.oz];          
     }
-    console.log((plusValue as any)[beer.oz]);
 
 
 
